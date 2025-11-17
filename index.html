@@ -1,0 +1,1064 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luis Cabrera | UX/UI Portfolio</title>
+    <style>
+        :root {
+            --bg-primary: #f6f7fb;
+            --bg-secondary: #ffffff;
+            --text-primary: #0e0f19;
+            --text-secondary: #5a6072;
+            --accent: #5c6ff8;
+            --accent-secondary: #a07bff;
+            --muted: rgba(14, 15, 25, 0.08);
+            --shadow-color: rgba(14, 15, 25, 0.08);
+            --card-blur: rgba(255, 255, 255, 0.6);
+        }
+
+        .theme-dark {
+            --bg-primary: #07080f;
+            --bg-secondary: #0d101c;
+            --text-primary: #f6f7fb;
+            --text-secondary: #b0b4c6;
+            --accent: #71b7ff;
+            --accent-secondary: #75f5c4;
+            --muted: rgba(246, 247, 251, 0.08);
+            --shadow-color: rgba(0, 0, 0, 0.55);
+            --card-blur: rgba(13, 16, 28, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .page {
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            padding: 1.5rem 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(18px);
+            background: color-mix(in srgb, var(--bg-primary) 75%, transparent);
+            border-bottom: 1px solid var(--muted);
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            font-weight: 600;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.35rem;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.35s ease;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: var(--accent);
+        }
+
+        nav a:hover::after,
+        nav a:focus::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 64px;
+            height: 32px;
+            border-radius: 32px;
+            border: 1px solid var(--muted);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            cursor: pointer;
+            gap: 0.25rem;
+            transition: background 0.4s ease, border 0.4s ease;
+        }
+
+        .toggle-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 0.75rem;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            transform: translateX(0);
+            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .theme-dark .toggle-thumb {
+            transform: translateX(32px);
+        }
+
+        main {
+            padding: 7rem 5vw 6rem;
+        }
+
+        section {
+            min-height: 90vh;
+            padding: 6rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-inner {
+            width: min(1200px, 95vw);
+            margin: 0 auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .cta-group {
+            margin-top: 2.5rem;
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .btn {
+            padding: 0.95rem 1.8rem;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(130deg, var(--accent), var(--accent-secondary));
+            color: #fff;
+            box-shadow: 0 20px 40px -20px var(--shadow-color);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--muted);
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+        }
+
+        .hero-visual {
+            position: relative;
+            aspect-ratio: 4 / 5;
+            border-radius: 32px;
+            background: linear-gradient(160deg, rgba(92, 111, 248, 0.75), rgba(160, 123, 255, 0.65));
+            overflow: hidden;
+            box-shadow: 0 30px 60px -30px var(--shadow-color);
+        }
+
+        .hero-visual::after {
+            content: "Luis Cabrera";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+
+        .about {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: var(--card-blur);
+            border: 1px solid var(--muted);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 25px 45px -35px var(--shadow-color);
+            backdrop-filter: blur(20px);
+            transition: transform 0.45s ease, border 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: color-mix(in srgb, var(--accent) 35%, var(--muted));
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            border-radius: 24px;
+            border: 1px solid var(--muted);
+            overflow: hidden;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -35px var(--shadow-color);
+        }
+
+        .project-thumb {
+            height: 220px;
+            background: linear-gradient(140deg, rgba(92, 111, 248, 0.8), rgba(160, 123, 255, 0.8));
+            color: rgba(255, 255, 255, 0.85);
+            display: grid;
+            place-items: center;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .project-content {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .skills-cloud {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            position: relative;
+        }
+
+        .skills-cloud .skill-pill {
+            animation: float var(--float-duration, 9s) ease-in-out infinite;
+            animation-delay: var(--float-delay, 0s);
+        }
+
+        .skills-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .skill-bar {
+            padding: 1.3rem;
+            border-radius: 18px;
+            border: 1px solid var(--muted);
+            background: var(--bg-secondary);
+            box-shadow: 0 20px 40px -35px var(--shadow-color);
+            transition: border 0.3s ease, transform 0.3s ease;
+        }
+
+        .skill-bar:hover {
+            transform: translateY(-4px);
+            border-color: color-mix(in srgb, var(--accent) 25%, var(--muted));
+        }
+
+        .skill-meta {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .skill-level {
+            font-size: 0.95rem;
+            color: var(--accent);
+        }
+
+        .bar-track {
+            position: relative;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--muted);
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-bar.filled .bar-fill {
+            width: var(--target-level);
+        }
+
+        .skill-pill {
+            padding: 0.7rem 1.3rem;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--accent) 15%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent-secondary) 25%, var(--muted));
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            transition: transform 0.35s ease;
+        }
+
+        .skill-pill:hover {
+            transform: translateY(-5px);
+            animation-play-state: paused;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--muted);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        footer {
+            padding: 2rem 5vw 3rem;
+            text-align: center;
+            border-top: 1px solid var(--muted);
+            color: var(--text-secondary);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+                transform 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 8, 15, 0.65);
+            backdrop-filter: blur(14px);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            width: min(640px, 92vw);
+            background: var(--bg-secondary);
+            border-radius: 28px;
+            padding: clamp(1.8rem, 4vw, 2.5rem);
+            border: 1px solid var(--muted);
+            box-shadow: 0 45px 90px -45px var(--shadow-color);
+            transform: translateY(30px);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .modal-overlay.visible .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            border: none;
+            background: color-mix(in srgb, var(--bg-secondary) 80%, transparent);
+            border-radius: 999px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            border: 1px solid var(--muted);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.05);
+        }
+
+        .modal-kicker {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-summary {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-meta p:first-child {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-meta p:last-child {
+            font-weight: 600;
+        }
+
+        .modal-highlights {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .modal-highlights li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .modal-highlights li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.65rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+        }
+
+        .hero-loaded .hero h1,
+        .hero-loaded .hero p,
+        .hero-loaded .cta-group {
+            animation: heroIn 1s ease forwards;
+        }
+
+        .hero-loaded .hero p {
+            animation-delay: 0.15s;
+        }
+
+        .hero-loaded .cta-group {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-12px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            section {
+                min-height: unset;
+                padding: 4rem 0;
+            }
+
+            .stats {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .modal {
+                padding: 1.5rem;
+            }
+
+            .modal-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header>
+            <div class="logo">LC / UX</div>
+            <nav aria-label="Primary">
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" aria-label="Toggle color mode">
+                <span class="toggle-thumb"></span>
+                <span class="toggle-icon">??</span>
+                <span class="toggle-icon">??</span>
+            </button>
+        </header>
+
+        <main>
+            <section id="hero">
+                <div class="section-inner hero">
+                    <div>
+                        <p class="kicker">UX / UI Designer</p>
+                        <h1>Crafting Intuitive Digital Experiences</h1>
+                        <p>
+                            I'm Luis Cabrera, a multidisciplinary designer blending research, strategy, and
+                            motion to build human-centered products for ambitious teams.
+                        </p>
+                        <div class="cta-group">
+                            <button class="btn btn-primary">View My Work</button>
+                            <button class="btn btn-outline">Download Résumé</button>
+                        </div>
+                    </div>
+                    <div class="hero-visual" aria-hidden="true"></div>
+                </div>
+            </section>
+
+            <section id="about">
+                <div class="section-inner about reveal">
+                    <div class="glass-card">
+                        <h2>About Me</h2>
+                        <p>
+                            Over the last eight years, I've partnered with SaaS companies, fintech startups,
+                            and global agencies to shape intuitive design systems and immersive product
+                            experiences. My process blends qualitative research with rapid prototyping to
+                            uncover elegant, scalable solutions.
+                        </p>
+                        <div class="stats">
+                            <div>
+                                <p class="stat">80+</p>
+                                <p>Products launched</p>
+                            </div>
+                            <div>
+                                <p class="stat">15</p>
+                                <p>Design awards</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Design Philosophy</h3>
+                        <p>
+                            I believe memorable digital experiences emerge from the interplay of empathy,
+                            contrast, and motion. I focus on establishing narrative clarity, reducing
+                            cognitive load, and revealing micro-interactions that guide users with intent.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="work">
+                <div class="section-inner">
+                    <div class="reveal">
+                        <h2>Selected Work</h2>
+                        <p class="section-desc">
+                            A snapshot of product stories spanning enterprise dashboards, consumer mobile,
+                            and data-rich platforms.
+                        </p>
+                    </div>
+                    <div class="projects-grid">
+                        <article class="project-card reveal">
+                            <div class="project-thumb">Intuitive SaaS Dashboard</div>
+                            <div class="project-content">
+                                <h3>Lumen Analytics Platform</h3>
+                                <p>
+                                    Redefined the analytics workflow with adaptive panels, modular layouts,
+                                    and motion cues that accelerate decision-making.
+                                </p>
+                                <button
+                                    class="btn btn-outline case-study-btn"
+                                    data-title="Lumen Analytics Platform"
+                                    data-summary="Redefined analytics workflow for enterprise product teams with modular insights and responsive data states."
+                                    data-role="Product Design Lead"
+                                    data-timeline="12-week sprint"
+                                    data-impact="32% faster reporting cycles"
+                                    data-detail="Modular decision panels with drag reflow|Adaptive color system for dense datasets|Context-aware motion cues that surface next-best actions"
+                                >
+                                    View Case Study
+                                </button>
+                            </div>
+                        </article>
+                        <article class="project-card reveal">
+                            <div class="project-thumb">Mobile App Redesign</div>
+                            <div class="project-content">
+                                <h3>Nova Health Companion</h3>
+                                <p>
+                                    Crafted a calm, assistive patient companion with biometric insights,
+                                    proactive nudges, and ambient storytelling.
+                                </p>
+                                <button
+                                    class="btn btn-outline case-study-btn"
+                                    data-title="Nova Health Companion"
+                                    data-summary="Designed a calm, assistive mobile experience translating biometrics into empathetic guidance."
+                                    data-role="Lead Product Designer"
+                                    data-timeline="6 sprint cycles"
+                                    data-impact="Boosted daily adherence by 41%"
+                                    data-detail="Ambient storytelling for adherence coaching|Voice-matched notifications for accessibility|Predictive insights based on patient context"
+                                >
+                                    View Case Study
+                                </button>
+                            </div>
+                        </article>
+                        <article class="project-card reveal">
+                            <div class="project-thumb">E-commerce Experience</div>
+                            <div class="project-content">
+                                <h3>Aero Essential Store</h3>
+                                <p>
+                                    Designed a high-conversion shopping journey with editorial storytelling,
+                                    augmented fit guidance, and tactile micro-interactions.
+                                </p>
+                                <button
+                                    class="btn btn-outline case-study-btn"
+                                    data-title="Aero Essential Store"
+                                    data-summary="Elevated a premium retail brand with editorial storytelling and tactile commerce patterns."
+                                    data-role="Principal UX/UI Designer"
+                                    data-timeline="10-week engagement"
+                                    data-impact="18% uplift in AOV"
+                                    data-detail="Immersive lookbook with adaptive 3D lighting|Smart fit guidance with confidence index|Seamless checkout built for multi-device continuity"
+                                >
+                                    View Case Study
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills">
+                <div class="section-inner">
+                    <div class="reveal">
+                        <h2>Skills & Toolset</h2>
+                        <p>
+                            Bridging research, visual systems, and code to deliver cohesive outcomes
+                            end-to-end.
+                        </p>
+                    </div>
+                    <div class="skills-grid">
+                        <div class="skills-cloud">
+                            <span class="skill-pill reveal">UX Research</span>
+                            <span class="skill-pill reveal">UI Design</span>
+                            <span class="skill-pill reveal">Design Systems</span>
+                            <span class="skill-pill reveal">Rapid Prototyping</span>
+                            <span class="skill-pill reveal">Figma</span>
+                            <span class="skill-pill reveal">Adobe XD</span>
+                            <span class="skill-pill reveal">HTML / CSS / JS</span>
+                            <span class="skill-pill reveal">Micro-interactions</span>
+                            <span class="skill-pill reveal">Motion Design</span>
+                        </div>
+                        <div class="skills-bars">
+                            <div class="skill-bar reveal" data-level="92">
+                                <div class="skill-meta">
+                                    <span>Experience Strategy</span>
+                                    <span class="skill-level">0%</span>
+                                </div>
+                                <div class="bar-track">
+                                    <span class="bar-fill"></span>
+                                </div>
+                            </div>
+                            <div class="skill-bar reveal" data-level="88">
+                                <div class="skill-meta">
+                                    <span>Design Systems</span>
+                                    <span class="skill-level">0%</span>
+                                </div>
+                                <div class="bar-track">
+                                    <span class="bar-fill"></span>
+                                </div>
+                            </div>
+                            <div class="skill-bar reveal" data-level="84">
+                                <div class="skill-meta">
+                                    <span>Motion / Prototyping</span>
+                                    <span class="skill-level">0%</span>
+                                </div>
+                                <div class="bar-track">
+                                    <span class="bar-fill"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact">
+                <div class="section-inner contact-grid">
+                    <div class="glass-card reveal">
+                        <h2>Let's Collaborate</h2>
+                        <p>
+                            Ready to shape the next flagship experience? Drop a note and I will respond in
+                            less than 24 hours.
+                        </p>
+                        <form>
+                            <label>
+                                <span>Name</span>
+                                <input type="text" placeholder="Your name" required />
+                            </label>
+                            <label>
+                                <span>Email</span>
+                                <input type="email" placeholder="you@email.com" required />
+                            </label>
+                            <label>
+                                <span>Project details</span>
+                                <textarea placeholder="Tell me about your vision"></textarea>
+                            </label>
+                            <button class="btn btn-primary" type="submit">Send Message</button>
+                        </form>
+                    </div>
+                    <div class="glass-card reveal">
+                        <h3>Connect</h3>
+                        <p>
+                            Follow my latest explorations in spatial interfaces, AI copilots, and expressive
+                            motion systems.
+                        </p>
+                        <div class="social-links">
+                            <a href="#">LinkedIn ?</a>
+                            <a href="#">Dribbble ?</a>
+                            <a href="#">Behance ?</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="modal-overlay" aria-hidden="true">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <button class="modal-close" aria-label="Close case study">×</button>
+                <p class="modal-kicker">Case Study</p>
+                <h3 id="modal-title" class="modal-title">Project Title</h3>
+                <p class="modal-summary">High-level summary of the engagement.</p>
+                <div class="modal-meta">
+                    <div>
+                        <p>Role</p>
+                        <p class="modal-role">Lead Designer</p>
+                    </div>
+                    <div>
+                        <p>Timeline</p>
+                        <p class="modal-timeline">Q1 2024</p>
+                    </div>
+                    <div>
+                        <p>Impact</p>
+                        <p class="modal-impact">Placeholder metric</p>
+                    </div>
+                </div>
+                <ul class="modal-highlights">
+                    <li>Placeholder highlight describing process or outcome.</li>
+                    <li>Additional bullet showcasing insights delivered.</li>
+                    <li>Notes about collaboration and measurable results.</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            © 2024 Luis Cabrera — Available for select collaborations.
+        </footer>
+    </div>
+
+    <script>
+        const body = document.body;
+        const toggle = document.querySelector('.theme-toggle');
+        const heroSection = document.getElementById('hero');
+        const revealItems = document.querySelectorAll('.reveal');
+        const caseStudyButtons = document.querySelectorAll('.case-study-btn');
+        const modalOverlay = document.querySelector('.modal-overlay');
+        const modalTitle = document.querySelector('.modal-title');
+        const modalSummary = document.querySelector('.modal-summary');
+        const modalRole = document.querySelector('.modal-role');
+        const modalTimeline = document.querySelector('.modal-timeline');
+        const modalImpact = document.querySelector('.modal-impact');
+        const modalHighlights = document.querySelector('.modal-highlights');
+        const modalClose = document.querySelector('.modal-close');
+        const skillBars = document.querySelectorAll('.skill-bar');
+        const cloudPills = document.querySelectorAll('.skills-cloud .skill-pill');
+
+        window.addEventListener('load', () => {
+            heroSection.classList.add('hero-loaded');
+        });
+
+        toggle.addEventListener('click', () => {
+            body.classList.toggle('theme-dark');
+            body.classList.add('theme-transition');
+            setTimeout(() => body.classList.remove('theme-transition'), 500);
+        });
+
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        revealItems.forEach(item => observer.observe(item));
+
+        const openModal = () => {
+            modalOverlay.classList.add('visible');
+            modalOverlay.setAttribute('aria-hidden', 'false');
+            body.classList.add('modal-open');
+        };
+
+        const closeModal = () => {
+            modalOverlay.classList.remove('visible');
+            modalOverlay.setAttribute('aria-hidden', 'true');
+            body.classList.remove('modal-open');
+        };
+
+        caseStudyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modalTitle.textContent = button.dataset.title;
+                modalSummary.textContent = button.dataset.summary;
+                modalRole.textContent = button.dataset.role;
+                modalTimeline.textContent = button.dataset.timeline;
+                modalImpact.textContent = button.dataset.impact;
+
+                modalHighlights.innerHTML = '';
+                const highlights = (button.dataset.detail || '').split('|').filter(Boolean);
+                if (highlights.length) {
+                    highlights.forEach(point => {
+                        const li = document.createElement('li');
+                        li.textContent = point.trim();
+                        modalHighlights.appendChild(li);
+                    });
+                }
+
+                openModal();
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+
+        modalOverlay.addEventListener('click', event => {
+            if (event.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+                closeModal();
+            }
+        });
+
+        skillBars.forEach(bar => {
+            const target = bar.dataset.level || 0;
+            bar.style.setProperty('--target-level', `${target}%`);
+            const levelLabel = bar.querySelector('.skill-level');
+            if (levelLabel) {
+                levelLabel.textContent = `${target}%`;
+            }
+        });
+
+        const skillObserver = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('filled');
+                        skillObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.35 }
+        );
+
+        skillBars.forEach(bar => skillObserver.observe(bar));
+
+        cloudPills.forEach((pill, index) => {
+            const duration = 7 + (index % 4) * 1.2;
+            const delay = (index * 0.35) % 5;
+            pill.style.setProperty('--float-duration', `${duration}s`);
+            pill.style.setProperty('--float-delay', `${delay}s`);
+        });
+    </script>
+</body>
+</html>
+
