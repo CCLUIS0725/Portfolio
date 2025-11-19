@@ -1,32 +1,44 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Luis Cabrera | UX/UI Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #f6f7fb;
+            --bg-primary: #f8f9fc;
             --bg-secondary: #ffffff;
             --text-primary: #0e0f19;
             --text-secondary: #5a6072;
-            --accent: #5c6ff8;
-            --accent-secondary: #a07bff;
+            --accent: #4f46e5;
+            /* Indigo 600 */
+            --accent-secondary: #9333ea;
+            /* Purple 600 */
             --muted: rgba(14, 15, 25, 0.08);
-            --shadow-color: rgba(14, 15, 25, 0.08);
-            --card-blur: rgba(255, 255, 255, 0.6);
+            --shadow-color: rgba(14, 15, 25, 0.06);
+            --card-blur: rgba(255, 255, 255, 0.75);
+            --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+            --font-display: "Space Grotesk", sans-serif;
         }
 
         .theme-dark {
-            --bg-primary: #07080f;
-            --bg-secondary: #0d101c;
+            --bg-primary: #050507;
+            --bg-secondary: #0f111a;
             --text-primary: #f6f7fb;
-            --text-secondary: #b0b4c6;
-            --accent: #71b7ff;
-            --accent-secondary: #75f5c4;
-            --muted: rgba(246, 247, 251, 0.08);
-            --shadow-color: rgba(0, 0, 0, 0.55);
-            --card-blur: rgba(13, 16, 28, 0.65);
+            --text-secondary: #a0a4b8;
+            --accent: #818cf8;
+            /* Indigo 400 */
+            --accent-secondary: #c084fc;
+            /* Purple 400 */
+            --muted: rgba(246, 247, 251, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --card-blur: rgba(15, 17, 26, 0.7);
         }
 
         * {
@@ -35,17 +47,21 @@
             padding: 0;
         }
 
+        html,
         body {
-            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            font-family: var(--font-sans);
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             scroll-behavior: smooth;
             transition: background 0.6s ease, color 0.6s ease;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        body.modal-open {
-            overflow: hidden;
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         ::selection {
@@ -56,66 +72,222 @@
         .page {
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
         header {
-            position: fixed;
+            position: absolute;
+            /* Static relative to document flow, not fixed */
             top: 0;
             width: 100%;
             z-index: 999;
-            padding: 1.5rem 5vw;
+            padding: 2rem 5vw;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            backdrop-filter: blur(18px);
-            background: color-mix(in srgb, var(--bg-primary) 75%, transparent);
-            border-bottom: 1px solid var(--muted);
+            background: transparent;
+            /* Removed blur/bg for cleaner static look */
         }
 
         .logo {
-            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
             text-transform: uppercase;
-            letter-spacing: 0.2rem;
-            font-weight: 600;
+            letter-spacing: 0.1em;
+            font-weight: 700;
         }
 
-        nav ul {
-            list-style: none;
+
+        /* --- Side stagger navigation (line stack) --- */
+        .line-stack-nav {
+            position: fixed;
+            right: 2.5rem;
+            top: 55%;
+            /* Moved down slightly */
+            transform: translateY(-50%);
             display: flex;
-            gap: 2rem;
+            flex-direction: column;
+            gap: 2.5rem;
+            z-index: 800;
+            /* Lower z-index than header if they were to overlap */
+            pointer-events: auto;
+            align-items: flex-end;
         }
 
-        nav a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.95rem;
+        .line-stack-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            pointer-events: auto;
+        }
+
+        .line-stack-title {
             position: relative;
-            transition: color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.25rem 0;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            --stack-progress: 0;
+            --stack-emphasis: 0;
         }
 
-        nav a::after {
+        .line-stack-title::before {
             content: "";
             position: absolute;
-            left: 0;
-            bottom: -0.35rem;
-            width: 100%;
+            left: -2.5rem;
+            top: 50%;
+            width: 1.5rem;
             height: 2px;
-            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+            border-radius: 999px;
+            background: var(--accent);
+            transform-origin: left center;
             transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.35s ease;
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        nav a:hover,
-        nav a:focus {
-            color: var(--accent);
+        .line-stack-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            align-items: flex-end;
         }
 
-        nav a:hover::after,
-        nav a:focus::after {
+        .line-stack-lines span {
+            display: block;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--text-secondary);
+            opacity: 0.2;
+            transform-origin: right center;
+            transform: scaleX(0.5);
+            transition: all 0.3s ease;
+        }
+
+        .line-stack-lines span.is-on {
+            opacity: 1;
+            background: var(--accent);
             transform: scaleX(1);
-            transform-origin: left;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .line-stack-lines span:nth-child(1) {
+            width: 12px;
+        }
+
+        .line-stack-lines span:nth-child(2) {
+            width: 20px;
+        }
+
+        .line-stack-lines span:nth-child(3) {
+            width: 16px;
+        }
+
+        .line-stack-lines span:nth-child(4) {
+            width: 18px;
+        }
+
+        .line-stack-lines span:nth-child(5) {
+            width: 14px;
+        }
+
+        .line-stack-lines span:nth-child(6) {
+            width: 10px;
+        }
+
+        .line-stack-lines span:nth-child(7) {
+            width: 22px;
+        }
+
+        .line-stack-lines span:nth-child(8) {
+            width: 18px;
+        }
+
+        .line-stack-lines span:nth-child(9) {
+            width: 20px;
+        }
+
+        .line-stack-lines span:nth-child(10) {
+            width: 12px;
+        }
+
+        .line-stack-lines span:nth-child(11) {
+            width: 28px;
+        }
+
+        .line-stack-lines span:nth-child(12) {
+            width: 24px;
+        }
+
+        .line-stack-group:hover .line-stack-title {
+            transform: translateX(-5px);
+            color: var(--text-primary);
+        }
+
+        .line-stack-group.is-active .line-stack-title {
+            color: var(--accent);
+            transform: translateX(-12px);
+            font-weight: 700;
+            /* Base size 0.75rem, scales up by 0.75rem (total 1.5rem = 2x) based on emphasis */
+            font-size: calc(0.75rem + 0.75rem * var(--stack-emphasis, 0));
+        }
+
+        .line-stack-group.is-active .line-stack-title::before {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        .theme-dark .line-stack-title {
+            color: color-mix(in srgb, var(--text-secondary) 50%, var(--accent) 15%);
+        }
+
+        .theme-dark .line-stack-lines span {
+            background: color-mix(in srgb, #ffffff 30%, transparent);
+        }
+
+        .theme-dark .line-stack-lines span.is-on {
+            background: color-mix(in srgb, var(--accent) 80%, #ffffff 20%);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90vw;
+            height: 4px;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--muted) 50%, transparent);
+            overflow: hidden;
+            z-index: 950;
+            display: none;
+        }
+
+        .scroll-progress-bar {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            transition: width 0.15s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .line-stack-nav {
+                display: none;
+            }
+
+            .scroll-progress {
+                display: block;
+            }
         }
 
         .theme-toggle {
@@ -242,6 +414,10 @@
             background: linear-gradient(160deg, rgba(92, 111, 248, 0.75), rgba(160, 123, 255, 0.65));
             overflow: hidden;
             box-shadow: 0 30px 60px -30px var(--shadow-color);
+            max-width: 340px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-visual::after {
@@ -250,10 +426,56 @@
             inset: 0;
             display: grid;
             place-items: center;
-            font-size: 2rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            color: rgba(255, 255, 255, 0.75);
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+        }
+
+        .hero-heading-animated {
+            min-height: clamp(7rem, 11vw, 14rem);
+            margin-bottom: 1.25rem;
+        }
+
+        .decrypt-shell {
+            display: inline-flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .decrypt-shell .decrypt-display {
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: clamp(2.6rem, 6vw, 4.8rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        .decrypt-char {
+            display: inline-block;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .decrypt-char.encrypted {
+            color: var(--text-secondary);
+            opacity: 0.45;
+        }
+
+        .decrypt-shell[data-animating="true"] .decrypt-char.encrypted {
+            opacity: 0.65;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
         .about {
@@ -296,32 +518,35 @@
         }
 
         .project-card {
-            border-radius: 24px;
+            border-radius: 36px;
             border: 1px solid var(--muted);
             overflow: hidden;
             background: var(--bg-secondary);
             display: flex;
             flex-direction: column;
             transition: transform 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0 35px 65px -45px var(--shadow-color);
         }
 
         .project-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 60px -35px var(--shadow-color);
+            box-shadow: 0 35px 70px -35px var(--shadow-color);
         }
 
         .project-thumb {
-            height: 220px;
-            background: linear-gradient(140deg, rgba(92, 111, 248, 0.8), rgba(160, 123, 255, 0.8));
+            min-height: 240px;
+            background: linear-gradient(140deg, rgba(92, 111, 248, 0.92), rgba(160, 123, 255, 0.9));
             color: rgba(255, 255, 255, 0.85);
             display: grid;
             place-items: center;
             font-weight: 600;
             letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 0.95rem;
         }
 
         .project-content {
-            padding: 1.75rem;
+            padding: 2.2rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -488,118 +713,6 @@
             transform: translateY(0);
         }
 
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(7, 8, 15, 0.65);
-            backdrop-filter: blur(14px);
-            display: grid;
-            place-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-            z-index: 1000;
-        }
-
-        .modal-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal {
-            width: min(640px, 92vw);
-            background: var(--bg-secondary);
-            border-radius: 28px;
-            padding: clamp(1.8rem, 4vw, 2.5rem);
-            border: 1px solid var(--muted);
-            box-shadow: 0 45px 90px -45px var(--shadow-color);
-            transform: translateY(30px);
-            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-
-        .modal-overlay.visible .modal {
-            transform: translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.25rem;
-            right: 1.25rem;
-            border: none;
-            background: color-mix(in srgb, var(--bg-secondary) 80%, transparent);
-            border-radius: 999px;
-            width: 40px;
-            height: 40px;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: var(--text-primary);
-            border: 1px solid var(--muted);
-            transition: transform 0.2s ease;
-        }
-
-        .modal-close:hover {
-            transform: scale(1.05);
-        }
-
-        .modal-kicker {
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .modal-title {
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-summary {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-meta p:first-child {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
-
-        .modal-meta p:last-child {
-            font-weight: 600;
-        }
-
-        .modal-highlights {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.7rem;
-        }
-
-        .modal-highlights li {
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .modal-highlights li::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0.65rem;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
-        }
 
         .hero-loaded .hero h1,
         .hero-loaded .hero p,
@@ -620,6 +733,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -630,6 +744,7 @@
             from {
                 transform: translateY(0);
             }
+
             to {
                 transform: translateY(-12px);
             }
@@ -638,10 +753,6 @@
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
-                gap: 1rem;
-            }
-
-            nav ul {
                 gap: 1rem;
             }
 
@@ -655,42 +766,37 @@
                 gap: 1rem;
             }
 
-            .modal {
-                padding: 1.5rem;
-            }
-
-            .modal-meta {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
+
 <body>
     <div class="page">
         <header>
             <div class="logo">LC / UX</div>
-            <nav aria-label="Primary">
-                <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#work">Work</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
             <button class="theme-toggle" aria-label="Toggle color mode">
                 <span class="toggle-thumb"></span>
                 <span class="toggle-icon">??</span>
                 <span class="toggle-icon">??</span>
             </button>
         </header>
+        <div class="scroll-progress" aria-hidden="true">
+            <div class="scroll-progress-bar"></div>
+        </div>
 
         <main>
             <section id="hero">
                 <div class="section-inner hero">
                     <div>
                         <p class="kicker">UX / UI Designer</p>
-                        <h1>Crafting Intuitive Digital Experiences</h1>
+                        <h1 class="sr-only">Crafting Intuitive Digital Experiences</h1>
+                        <div class="decrypt-shell hero-heading-animated" data-decrypt-text
+                            data-text="Crafting&#10;Intuitive Digital&#10;Experiences" data-speed="55"
+                            data-max-iterations="22" data-sequential="true" data-reveal-direction="start"
+                            data-characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*" data-animate-on="load">
+                            <span class="sr-only">Crafting Intuitive Digital Experiences</span>
+                            <span class="decrypt-display" data-decrypt-display aria-hidden="true"></span>
+                        </div>
                         <p>
                             I'm Luis Cabrera, a multidisciplinary designer blending research, strategy, and
                             motion to build human-centered products for ambitious teams.
@@ -754,17 +860,9 @@
                                     Redefined the analytics workflow with adaptive panels, modular layouts,
                                     and motion cues that accelerate decision-making.
                                 </p>
-                                <button
-                                    class="btn btn-outline case-study-btn"
-                                    data-title="Lumen Analytics Platform"
-                                    data-summary="Redefined analytics workflow for enterprise product teams with modular insights and responsive data states."
-                                    data-role="Product Design Lead"
-                                    data-timeline="12-week sprint"
-                                    data-impact="32% faster reporting cycles"
-                                    data-detail="Modular decision panels with drag reflow|Adaptive color system for dense datasets|Context-aware motion cues that surface next-best actions"
-                                >
+                                <a class="btn btn-outline" href="case-study.html?project=lumen">
                                     View Case Study
-                                </button>
+                                </a>
                             </div>
                         </article>
                         <article class="project-card reveal">
@@ -775,17 +873,9 @@
                                     Crafted a calm, assistive patient companion with biometric insights,
                                     proactive nudges, and ambient storytelling.
                                 </p>
-                                <button
-                                    class="btn btn-outline case-study-btn"
-                                    data-title="Nova Health Companion"
-                                    data-summary="Designed a calm, assistive mobile experience translating biometrics into empathetic guidance."
-                                    data-role="Lead Product Designer"
-                                    data-timeline="6 sprint cycles"
-                                    data-impact="Boosted daily adherence by 41%"
-                                    data-detail="Ambient storytelling for adherence coaching|Voice-matched notifications for accessibility|Predictive insights based on patient context"
-                                >
+                                <a class="btn btn-outline" href="case-study.html?project=nova">
                                     View Case Study
-                                </button>
+                                </a>
                             </div>
                         </article>
                         <article class="project-card reveal">
@@ -796,17 +886,9 @@
                                     Designed a high-conversion shopping journey with editorial storytelling,
                                     augmented fit guidance, and tactile micro-interactions.
                                 </p>
-                                <button
-                                    class="btn btn-outline case-study-btn"
-                                    data-title="Aero Essential Store"
-                                    data-summary="Elevated a premium retail brand with editorial storytelling and tactile commerce patterns."
-                                    data-role="Principal UX/UI Designer"
-                                    data-timeline="10-week engagement"
-                                    data-impact="18% uplift in AOV"
-                                    data-detail="Immersive lookbook with adaptive 3D lighting|Smart fit guidance with confidence index|Seamless checkout built for multi-device continuity"
-                                >
+                                <a class="btn btn-outline" href="case-study.html?project=aero">
                                     View Case Study
-                                </button>
+                                </a>
                             </div>
                         </article>
                     </div>
@@ -906,57 +988,255 @@
                 </div>
             </section>
         </main>
-
-        <div class="modal-overlay" aria-hidden="true">
-            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-                <button class="modal-close" aria-label="Close case study">×</button>
-                <p class="modal-kicker">Case Study</p>
-                <h3 id="modal-title" class="modal-title">Project Title</h3>
-                <p class="modal-summary">High-level summary of the engagement.</p>
-                <div class="modal-meta">
-                    <div>
-                        <p>Role</p>
-                        <p class="modal-role">Lead Designer</p>
-                    </div>
-                    <div>
-                        <p>Timeline</p>
-                        <p class="modal-timeline">Q1 2024</p>
-                    </div>
-                    <div>
-                        <p>Impact</p>
-                        <p class="modal-impact">Placeholder metric</p>
-                    </div>
+        <nav class="line-stack-nav" aria-label="Section navigation">
+            <div class="line-stack-group is-active" data-section="hero">
+                <a class="line-stack-title" href="#hero">Intro</a>
+                <div class="line-stack-lines">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
                 </div>
-                <ul class="modal-highlights">
-                    <li>Placeholder highlight describing process or outcome.</li>
-                    <li>Additional bullet showcasing insights delivered.</li>
-                    <li>Notes about collaboration and measurable results.</li>
-                </ul>
             </div>
-        </div>
-
+            <div class="line-stack-group" data-section="about">
+                <a class="line-stack-title" href="#about">About</a>
+                <div class="line-stack-lines">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+            <div class="line-stack-group" data-section="work">
+                <a class="line-stack-title" href="#work">Work</a>
+                <div class="line-stack-lines">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+            <div class="line-stack-group" data-section="skills">
+                <a class="line-stack-title" href="#skills">Skills</a>
+                <div class="line-stack-lines">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+            <div class="line-stack-group" data-section="contact">
+                <a class="line-stack-title" href="#contact">Contact</a>
+            </div>
+        </nav>
         <footer>
             © 2024 Luis Cabrera — Available for select collaborations.
         </footer>
     </div>
 
     <script>
+        const throttle = (func, limit) => {
+            let inThrottle;
+            return function () {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        class DecryptedTextEffect {
+            constructor(container) {
+                this.container = container;
+                this.text = (container.dataset.text || container.textContent || '').replace(/\\n/g, '\n');
+                this.speed = Number(container.dataset.speed) || 50;
+                this.maxIterations = Number(container.dataset.maxIterations) || 10;
+                this.sequential = container.dataset.sequential === 'true';
+                this.revealDirection = container.dataset.revealDirection || 'start';
+                this.characters =
+                    container.dataset.characters ||
+                    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()_+';
+                this.animateOn = container.dataset.animateOn || 'hover';
+                this.displayEl = container.querySelector('[data-decrypt-display]') || container;
+                this.srText = container.querySelector('.sr-only');
+                if (this.srText) {
+                    this.srText.textContent = this.text.replace(/\n/g, ' ');
+                }
+                this.fixedIndices = new Set();
+                this.text.split('').forEach((char, index) => {
+                    if (char === ' ' || char === '\n') {
+                        this.fixedIndices.add(index);
+                    }
+                });
+                this.revealed = new Set(this.fixedIndices);
+                this.iteration = 0;
+                this.interval = null;
+                this.isScrambling = false;
+                this.hasAnimated = false;
+                this.updateDisplay(this.text);
+                this.attachEvents();
+                if (this.animateOn === 'view' || this.animateOn === 'both') {
+                    this.observe();
+                }
+                if (this.animateOn === 'load') {
+                    this.start();
+                }
+            }
+
+            attachEvents() {
+                if (this.animateOn === 'hover' || this.animateOn === 'both') {
+                    this.container.addEventListener('mouseenter', () => this.start());
+                    if (this.animateOn === 'hover') {
+                        this.container.addEventListener('mouseleave', () => this.finish());
+                    }
+                }
+            }
+
+            observe() {
+                this.observer = new IntersectionObserver(
+                    entries => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !this.hasAnimated) {
+                                this.hasAnimated = true;
+                                this.start();
+                                if (this.animateOn === 'view') {
+                                    this.observer.unobserve(this.container);
+                                }
+                            }
+                        });
+                    },
+                    { threshold: 0.2 }
+                );
+                this.observer.observe(this.container);
+            }
+
+            start() {
+                if (this.isScrambling) return;
+                this.revealed = new Set(this.fixedIndices);
+                this.iteration = 0;
+                this.isScrambling = true;
+                this.container.dataset.animating = 'true';
+                this.run();
+            }
+
+            run() {
+                if (this.interval) clearInterval(this.interval);
+                if (this.sequential) {
+                    this.interval = setInterval(() => {
+                        if (this.revealed.size >= this.text.length) {
+                            this.finish();
+                            return;
+                        }
+                        const nextIndex = this.getNextIndex();
+                        if (nextIndex === null || nextIndex === undefined) {
+                            this.finish();
+                            return;
+                        }
+                        this.revealed.add(nextIndex);
+                        const scrambled = this.shuffleWithReveals();
+                        this.updateDisplay(scrambled, true);
+                    }, this.speed);
+                } else {
+                    this.interval = setInterval(() => {
+                        this.iteration += 1;
+                        if (this.iteration >= this.maxIterations) {
+                            this.finish();
+                            return;
+                        }
+                        const scrambled = this.shuffleRandom();
+                        this.updateDisplay(scrambled, true);
+                    }, this.speed);
+                }
+            }
+
+            finish() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+                this.isScrambling = false;
+                this.container.dataset.animating = 'false';
+                this.updateDisplay(this.text);
+            }
+
+            shuffleWithReveals() {
+                return this.text
+                    .split('')
+                    .map((char, index) => {
+                        if (char === '\n' || char === ' ') return char;
+                        if (this.revealed.has(index)) {
+                            return char;
+                        }
+                        return this.randomChar();
+                    })
+                    .join('');
+            }
+
+            shuffleRandom() {
+                return this.text
+                    .split('')
+                    .map(char => {
+                        if (char === '\n' || char === ' ') return char;
+                        return this.randomChar();
+                    })
+                    .join('');
+            }
+
+            randomChar() {
+                if (!this.characters.length) return '';
+                const index = Math.floor(Math.random() * this.characters.length);
+                return this.characters[index];
+            }
+
+            getNextIndex() {
+                const len = this.text.length;
+                const available = index => index >= 0 && index < len && !this.revealed.has(index);
+
+                switch (this.revealDirection) {
+                    case 'end':
+                        for (let i = len - 1; i >= 0; i--) {
+                            if (available(i)) return i;
+                        }
+                        break;
+                    case 'center': {
+                        const middle = Math.floor(len / 2);
+                        for (let offset = 0; offset < len; offset++) {
+                            const right = middle + offset;
+                            const left = middle - offset;
+                            if (available(right)) return right;
+                            if (available(left)) return left;
+                        }
+                        break;
+                    }
+                    default:
+                        for (let i = 0; i < len; i++) {
+                            if (available(i)) return i;
+                        }
+                }
+                return null;
+            }
+
+            updateDisplay(value, scrambled = false) {
+                if (!this.displayEl) return;
+                this.displayEl.innerHTML = '';
+                value.split('').forEach((char, index) => {
+                    if (char === '\n') {
+                        this.displayEl.appendChild(document.createElement('br'));
+                        return;
+                    }
+                    const span = document.createElement('span');
+                    span.className = 'decrypt-char';
+                    if (scrambled && !this.revealed.has(index) && char !== ' ') {
+                        span.classList.add('encrypted');
+                    }
+                    span.textContent = char;
+                    this.displayEl.appendChild(span);
+                });
+            }
+        }
+
         const body = document.body;
         const toggle = document.querySelector('.theme-toggle');
         const heroSection = document.getElementById('hero');
         const revealItems = document.querySelectorAll('.reveal');
-        const caseStudyButtons = document.querySelectorAll('.case-study-btn');
-        const modalOverlay = document.querySelector('.modal-overlay');
-        const modalTitle = document.querySelector('.modal-title');
-        const modalSummary = document.querySelector('.modal-summary');
-        const modalRole = document.querySelector('.modal-role');
-        const modalTimeline = document.querySelector('.modal-timeline');
-        const modalImpact = document.querySelector('.modal-impact');
-        const modalHighlights = document.querySelector('.modal-highlights');
-        const modalClose = document.querySelector('.modal-close');
         const skillBars = document.querySelectorAll('.skill-bar');
         const cloudPills = document.querySelectorAll('.skills-cloud .skill-pill');
-
+        const decryptTargets = document.querySelectorAll('[data-decrypt-text]');
         window.addEventListener('load', () => {
             heroSection.classList.add('hero-loaded');
         });
@@ -980,54 +1260,7 @@
         );
 
         revealItems.forEach(item => observer.observe(item));
-
-        const openModal = () => {
-            modalOverlay.classList.add('visible');
-            modalOverlay.setAttribute('aria-hidden', 'false');
-            body.classList.add('modal-open');
-        };
-
-        const closeModal = () => {
-            modalOverlay.classList.remove('visible');
-            modalOverlay.setAttribute('aria-hidden', 'true');
-            body.classList.remove('modal-open');
-        };
-
-        caseStudyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modalTitle.textContent = button.dataset.title;
-                modalSummary.textContent = button.dataset.summary;
-                modalRole.textContent = button.dataset.role;
-                modalTimeline.textContent = button.dataset.timeline;
-                modalImpact.textContent = button.dataset.impact;
-
-                modalHighlights.innerHTML = '';
-                const highlights = (button.dataset.detail || '').split('|').filter(Boolean);
-                if (highlights.length) {
-                    highlights.forEach(point => {
-                        const li = document.createElement('li');
-                        li.textContent = point.trim();
-                        modalHighlights.appendChild(li);
-                    });
-                }
-
-                openModal();
-            });
-        });
-
-        modalClose.addEventListener('click', closeModal);
-
-        modalOverlay.addEventListener('click', event => {
-            if (event.target === modalOverlay) {
-                closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape' && modalOverlay.classList.contains('visible')) {
-                closeModal();
-            }
-        });
+        decryptTargets.forEach(target => new DecryptedTextEffect(target));
 
         skillBars.forEach(bar => {
             const target = bar.dataset.level || 0;
@@ -1058,7 +1291,109 @@
             pill.style.setProperty('--float-duration', `${duration}s`);
             pill.style.setProperty('--float-delay', `${delay}s`);
         });
+
+        // --- Line stack navigation behavior ---
+        const stackGroups = document.querySelectorAll('.line-stack-group');
+        const stackOrder = ['hero', 'about', 'work', 'skills', 'contact'];
+        const stackGroupMap = new Map();
+        stackGroups.forEach(group => stackGroupMap.set(group.dataset.section, group));
+
+        if (stackGroups.length) {
+            stackGroups[0]?.classList.add('is-active');
+
+            const stackTitles = document.querySelectorAll('.line-stack-title');
+            stackTitles.forEach(title => {
+                title.addEventListener('click', event => {
+                    const id = title.closest('.line-stack-group')?.dataset.section;
+                    const target = document.getElementById(id);
+                    if (!target) return;
+
+                    event.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            const stackSections = stackOrder
+                .map(id => document.getElementById(id))
+                .filter(Boolean);
+
+            // Removed IntersectionObserver for stackGroups to rely on scroll position for accuracy
+
+            let stackMap = [];
+            const buildStackMap = () => {
+                stackMap = stackSections.map(section => ({
+                    id: section.id,
+                    top: section.offsetTop,
+                    height: section.offsetHeight || 1
+                }));
+                updateStackProgress();
+            };
+
+            const updateStackProgress = () => {
+                const scrollPosition = window.scrollY;
+                const viewportCenter = scrollPosition + window.innerHeight * 0.4; // Trigger point at 40% down the screen
+
+                stackMap.forEach(({ id, top, height }) => {
+                    let ratio = 0;
+                    let emphasis = 0;
+                    const group = stackGroupMap.get(id);
+                    if (!group) return;
+
+                    // Determine active state based on viewport center overlapping the section
+                    const isActive = viewportCenter >= top && viewportCenter < (top + height);
+                    group.classList.toggle('is-active', isActive);
+
+                    if (scrollPosition < top) {
+                        ratio = 0;
+                        emphasis = 0;
+                    } else if (scrollPosition >= top && scrollPosition <= top + height) {
+                        ratio = (scrollPosition - top) / Math.max(height, 1);
+                        ratio = Math.min(Math.max(ratio, 0), 1);
+                        // Emphasis starts at 1 (top of section) and goes to 0
+                        emphasis = Math.max(1 - ratio, 0);
+                    } else {
+                        ratio = 1;
+                        emphasis = 0;
+                    }
+
+                    const title = group.querySelector('.line-stack-title');
+                    if (title) {
+                        title.style.setProperty('--stack-progress', ratio.toFixed(3));
+                        title.style.setProperty('--stack-emphasis', emphasis.toFixed(3));
+                    }
+                    const lines = group.querySelectorAll('.line-stack-lines span');
+                    const activeCount = Math.round(ratio * lines.length);
+                    lines.forEach((line, index) => {
+                        line.classList.toggle('is-on', index < activeCount);
+                    });
+                });
+            };
+
+            buildStackMap();
+            window.addEventListener('resize', () => {
+                buildStackMap();
+                updateProgressBar();
+            });
+
+            const throttledUpdateStack = throttle(updateStackProgress, 50);
+            window.addEventListener('scroll', throttledUpdateStack, { passive: true });
+        }
+
+
+        const progressBar = document.querySelector('.scroll-progress-bar');
+        if (progressBar) {
+            const updateProgressBar = () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = `${pct}%`;
+            };
+
+            updateProgressBar();
+            const throttledUpdateProgress = throttle(updateProgressBar, 30);
+            window.addEventListener('scroll', throttledUpdateProgress, { passive: true });
+        }
     </script>
 </body>
-</html>
 
+</html>

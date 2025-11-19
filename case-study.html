@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study | Luis Cabrera</title>
+    <style>
+        :root {
+            --bg-primary: #f6f7fb;
+            --bg-secondary: #ffffff;
+            --text-primary: #22222a;
+            --text-secondary: #4d5061;
+            --accent: #744acc;
+            --accent-strong: #4975e9;
+            --muted: rgba(34, 34, 42, 0.15);
+            --card-shadow: 0 45px 95px -60px rgba(18, 18, 38, 0.55);
+            --card-radius: 32px;
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        }
+
+        .theme-dark {
+            --bg-primary: #08090f;
+            --bg-secondary: #111323;
+            --text-primary: #f4f5fb;
+            --text-secondary: #c5c8d9;
+            --accent: #8a73ff;
+            --accent-strong: #5dc6ff;
+            --muted: rgba(244, 245, 251, 0.2);
+            --card-shadow: 0 40px 90px -55px rgba(0, 0, 0, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            min-height: 100vh;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(16px);
+            background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
+            border-bottom: 1px solid var(--muted);
+        }
+
+        .site-header {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 0;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1rem;
+            letter-spacing: 0.25rem;
+            font-weight: 600;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.75rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.3rem;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        nav a:hover,
+        nav a:focus-visible {
+            color: var(--accent);
+        }
+
+        nav a:hover::after,
+        nav a:focus-visible::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .theme-toggle {
+            width: 64px;
+            height: 32px;
+            border-radius: 32px;
+            border: 1px solid var(--muted);
+            background: var(--bg-secondary);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            cursor: pointer;
+        }
+
+        .theme-toggle span {
+            font-size: 0.8rem;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            transition: transform 0.4s ease;
+        }
+
+        .theme-dark .toggle-thumb {
+            transform: translateX(32px);
+        }
+
+        main {
+            padding: 4rem 0 6rem;
+        }
+
+        .case-main {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .case-hero {
+            background: radial-gradient(circle at 20% 20%, rgba(116, 74, 204, 0.4), transparent 60%),
+                linear-gradient(140deg, var(--accent), var(--accent-strong));
+            border-radius: 48px;
+            padding: clamp(2.5rem, 6vw, 4rem);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.15), transparent 40%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(2rem, 4vw, 4rem);
+            z-index: 1;
+        }
+
+        .hero-text .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(3rem, 5vw, 4.8rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-top: 0.5rem;
+        }
+
+        .hero-tagline {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .hero-description {
+            margin-top: 1rem;
+            font-size: 1rem;
+            max-width: 560px;
+            opacity: 0.9;
+        }
+
+        .hero-tools {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .hero-tools span {
+            padding: 0.4rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .hero-meta {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .hero-meta div {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-meta span {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .hero-meta p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 420px;
+        }
+
+        .device {
+            position: absolute;
+            width: clamp(220px, 60%, 320px);
+            aspect-ratio: 10 / 20;
+            border-radius: 36px;
+            background: rgba(8, 8, 8, 0.85);
+            box-shadow: 0 40px 80px -40px rgba(8, 8, 8, 0.6);
+            border: 6px solid rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+        }
+
+        .device-light {
+            right: 5%;
+            top: 15%;
+            background: linear-gradient(180deg, #fdf9ff, #f1edff);
+        }
+
+        .device-dark {
+            left: 5%;
+            bottom: 5%;
+            background: linear-gradient(180deg, #121323, #2c2f52);
+        }
+
+        .device::after,
+        .device::before {
+            content: "";
+            position: absolute;
+            border-radius: 24px;
+        }
+
+        .device::after {
+            inset: 12%;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .device-light::after {
+            background: linear-gradient(180deg, #fbfbff 0%, #edeafe 100%);
+        }
+
+        .case-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-heading {
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: var(--accent);
+            letter-spacing: -0.01em;
+        }
+
+        .white-card {
+            background: var(--bg-secondary);
+            border-radius: var(--card-radius);
+            padding: clamp(1.8rem, 3vw, 3rem);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--muted);
+        }
+
+        .overview-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .overview-card h3,
+        .goals-card h3,
+        .persona-card h3,
+        .research-card h3,
+        .solutions-card h3,
+        .deliverable-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-frame {
+            border-radius: 40px;
+            background: linear-gradient(135deg, rgba(116, 74, 204, 0.2), rgba(73, 117, 233, 0.25));
+            border: 1px solid color-mix(in srgb, var(--accent) 35%, white);
+            min-height: 420px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-frame::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 1.5rem;
+            left: 2rem;
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .goal-card {
+            background: radial-gradient(circle at 20% 20%, rgba(116, 74, 204, 0.25), transparent 60%),
+                var(--bg-secondary);
+            border: 1px solid var(--muted);
+            border-radius: 28px;
+            padding: 1.75rem;
+        }
+
+        .goal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(116, 74, 204, 0.1);
+            display: grid;
+            place-items: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .bullet-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .persona-card blockquote {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .persona-card blockquote::before {
+            content: "\201C";
+            font-size: 3rem;
+            position: absolute;
+            left: -1rem;
+            top: -1rem;
+            color: var(--accent);
+            opacity: 0.3;
+        }
+
+        .persona-goals {
+            margin-top: 1rem;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .research-card ul,
+        .learnings-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .process-step {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        .process-step p:first-child {
+            font-weight: 600;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .solution-card {
+            border: 1px solid var(--muted);
+            border-radius: 28px;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .artifact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .artifact-thumb {
+            border-radius: 24px;
+            background: linear-gradient(160deg, rgba(116, 74, 204, 0.18), rgba(73, 117, 233, 0.25));
+            border: 1px solid rgba(116, 74, 204, 0.22);
+            height: 180px;
+            display: grid;
+            place-items: center;
+            font-weight: 600;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            border-radius: 28px;
+            border: 1px solid var(--muted);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-card h4 {
+            font-size: 2.5rem;
+            margin-bottom: 0.35rem;
+            color: var(--accent);
+        }
+
+        .closing-card {
+            border-radius: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #fff;
+            padding: clamp(2rem, 4vw, 3.5rem);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .closing-card a {
+            align-self: center;
+            padding: 0.9rem 2.6rem;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        footer {
+            border-top: 1px solid var(--muted);
+            margin-top: 4rem;
+        }
+
+        .site-footer {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            nav ul {
+                display: none;
+            }
+
+            header {
+                position: relative;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .case-hero {
+                border-radius: 32px;
+            }
+
+            .feature-frame::after {
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header>
+            <div class="site-header">
+                <div class="logo">LC / UX</div>
+                <nav aria-label="Primary">
+                    <ul>
+                        <li><a href="index.html#hero">Home</a></li>
+                        <li><a href="index.html#work">Work</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" aria-label="Toggle color mode" type="button">
+                    <span class="toggle-thumb"></span>
+                    <span>☀️</span>
+                    <span>🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="case-main">
+                <section class="case-hero" id="hero">
+                    <div class="hero-inner">
+                        <div class="hero-text">
+                            <p class="eyebrow">Case Study</p>
+                            <h1 id="case-title">Case Title</h1>
+                            <p class="hero-tagline" id="case-tagline">Tagline</p>
+                            <p class="hero-description" id="case-description">Description</p>
+                            <div class="hero-tools" id="case-tools"></div>
+                            <div class="hero-meta">
+                                <div>
+                                    <span>Role</span>
+                                    <p id="case-role">Role</p>
+                                </div>
+                                <div>
+                                    <span>Timeline</span>
+                                    <p id="case-timeline">Timeline</p>
+                                </div>
+                                <div>
+                                    <span>Impact</span>
+                                    <p id="case-impact">Impact</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-visual" aria-hidden="true">
+                            <div class="device device-dark"></div>
+                            <div class="device device-light"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="case-section" id="overview">
+                    <div class="white-card overview-card">
+                        <div>
+                            <p class="eyebrow">Project Overview</p>
+                            <h3>Project Overview</h3>
+                            <p id="case-overview"></p>
+                        </div>
+                        <div>
+                            <p class="eyebrow">Problem Statement</p>
+                            <h3>The problem</h3>
+                            <p id="case-problem"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="feature-frame" id="feature-visual" data-label="Concept hero"></div>
+                </section>
+
+                <section class="case-section">
+                    <div class="white-card">
+                        <p class="eyebrow">Project Goals</p>
+                        <h2 class="section-heading">What success needed to prove</h2>
+                        <div class="goals-grid" id="case-goals"></div>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="white-card">
+                        <p class="eyebrow">User Problems</p>
+                        <h2 class="section-heading">Patterns we had to fix</h2>
+                        <ul class="bullet-list" id="case-user-problems"></ul>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="feature-frame" id="problem-visual" data-label="Research wall"></div>
+                </section>
+
+                <section class="case-section persona-grid" id="research">
+                    <div class="white-card persona-card">
+                        <p class="eyebrow">Primary persona</p>
+                        <h3 id="persona-name">Persona</h3>
+                        <p id="persona-role" class="hero-tagline" style="color: var(--text-secondary);"></p>
+                        <p id="persona-bio"></p>
+                        <ul class="persona-goals" id="persona-goals"></ul>
+                        <blockquote id="persona-quote"></blockquote>
+                    </div>
+                    <div class="white-card research-card">
+                        <p class="eyebrow">Research notes</p>
+                        <h3>What we heard</h3>
+                        <ul id="case-research"></ul>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="white-card">
+                        <p class="eyebrow">Process</p>
+                        <h2 class="section-heading">From signal to solution</h2>
+                        <div class="process-steps" id="case-process"></div>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="white-card solutions-card">
+                        <p class="eyebrow">Possible Solutions</p>
+                        <h2 class="section-heading">Product bets we shipped</h2>
+                        <p id="solutions-intro"></p>
+                        <div class="solution-grid" id="case-solutions"></div>
+                    </div>
+                </section>
+
+                <section class="case-section deliverables">
+                    <div class="white-card deliverable-card">
+                        <p class="eyebrow">Wireframes</p>
+                        <h3>Foundational structure</h3>
+                        <div class="artifact-grid" id="case-lowfi"></div>
+                    </div>
+                    <div class="white-card deliverable-card">
+                        <p class="eyebrow">High-fidelity</p>
+                        <h3>Crafted UI system</h3>
+                        <div class="artifact-grid" id="case-hifi"></div>
+                    </div>
+                </section>
+
+                <section class="case-section outcomes">
+                    <div class="white-card">
+                        <p class="eyebrow">Outcomes</p>
+                        <h2 class="section-heading">Measuring the result</h2>
+                        <div class="metric-grid" id="case-outcomes"></div>
+                    </div>
+                    <div class="white-card learnings-card">
+                        <p class="eyebrow">Learnings</p>
+                        <h3>What I would repeat</h3>
+                        <ul id="case-learnings"></ul>
+                    </div>
+                </section>
+
+                <section class="case-section">
+                    <div class="closing-card">
+                        <p class="eyebrow" style="color: rgba(255, 255, 255, 0.7);">Thanks for reading</p>
+                        <h2>Have a similar challenge?</h2>
+                        <p>Let's partner on calm, measurable products that celebrate the people behind the metrics.</p>
+                        <a href="index.html">Back to portfolio</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <div class="site-footer">
+                <p>&copy; <span id="footer-year"></span> Luis Cabrera. All rights reserved.</p>
+                <a href="mailto:hello@luisdesigns.com">hello@luisdesigns.com</a>
+            </div>
+        </footer>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('project') || 'lumen';
+
+        const STUDIES = {
+            lumen: {
+                title: 'Lumen Analytics Platform',
+                tagline: 'Enterprise intelligence that keeps pace with product velocity.',
+                description: 'We re-architected the data cockpit for product operators so they could see health, risks, and next best actions inside a single adaptive workspace.',
+                summary: 'Redefined analytics workflow for enterprise product teams with modular insights and responsive data states.',
+                tools: ['Figma', 'FigJam', 'Principle', 'After Effects'],
+                role: 'Product Design Lead',
+                timeline: '12-week sprint',
+                impact: '32% faster reporting cycles',
+                overview: 'Lumen centralizes telemetry, adoption signals, and release health into one canvas. We paired qualitative interviews with a telemetry audit to understand why reporting felt brittle and time-consuming.',
+                problem: 'Operators bounced between eight tools to prepare executive readouts. Insights arrived stale, no one trusted the metrics, and handoffs broke momentum.',
+                featureLabel: 'Modular dashboard hero concept',
+                problemLabel: 'Research mural and prioritization grid',
+                goals: [
+                    { title: 'Unify the signal', description: 'Design a single pane where ops teams could read squad health without reconciling spreadsheets.' },
+                    { title: 'Motivate action', description: 'Frame insights as living stories with next best actions so leads knew exactly what to do next.' },
+                    { title: 'Build trust', description: 'Expose provenance and alert fatigue controls to increase confidence in the numbers.' }
+                ],
+                userProblems: [
+                    'Insights lived across dashboards, emails, and ad hoc decks with no canonical source.',
+                    'Review rituals turned into debates about data freshness rather than action.',
+                    'Teams could not see downstream impact of blocking work, so escalations came too late.',
+                    'Executives wanted calm summaries while analysts wanted power tools, so there was no shared surface.'
+                ],
+                persona: {
+                    name: 'Maya Torres',
+                    role: 'Director of Product Operations',
+                    bio: 'Owns the health of six product squads and runs weekly readiness reviews. Lives in spreadsheets at 6 AM and still feels behind.',
+                    goals: ['See blockers before they spike churn', 'Orchestrate meetings with one living document', 'Give leaders a confident, visual story'],
+                    quote: 'If I spend more time reconciling decks than guiding our teams, the org is already late.'
+                },
+                researchHighlights: [
+                    { title: '12 stakeholder interviews', detail: 'Mapped four usage archetypes and how each consumes insight.' },
+                    { title: 'Telemetry audit', detail: 'Paired product analytics with service tickets to spot decay in reporting trust.' },
+                    { title: 'Shadowed 5 ops reviews', detail: 'Clocked 47 minutes of wasted prep per meeting due to duplicated screenshots.' }
+                ],
+                process: [
+                    { phase: 'Discover', detail: 'Shadowed sprint rituals, crafted opportunity tree, benchmarked workflows.' },
+                    { phase: 'Define', detail: 'Story mapped the north-star journey and prioritized KPIs with ops leaders.' },
+                    { phase: 'Design', detail: 'Built modular card system with breakpoints for desktop and tablet.' },
+                    { phase: 'Validate', detail: 'Ran hybrid usability plus quant test, iterated alert language, shipped beta.' }
+                ],
+                solutionIntro: 'We translated the research into guardrail concepts that pair guidance with measurable outcomes.',
+                solutions: [
+                    { title: 'Adaptive command center', detail: 'Responsive layout that reorders tiles by decision priority and team role.' },
+                    { title: 'Contextual stories', detail: 'Narrative headers that summarize trend and impact before the chart loads.' },
+                    { title: 'Health timeline', detail: 'Comparative timeline showing when each squad drifted from target.' },
+                    { title: 'Focus alerts', detail: 'Noise-aware system that batches nudges with clear next steps.' },
+                    { title: 'Cheat day controls', detail: 'Allows teams to pause metrics for planned maintenance without losing history.' },
+                    { title: 'Guided rituals', detail: 'Facilitated review mode that prompts who speaks next and captures decisions.' },
+                    { title: 'Peer channel', detail: 'Lightweight chat so analysts can push clarifying context inside the dashboard.' }
+                ],
+                deliverables: {
+                    lowFi: ['North-star journey map', 'Information architecture and card stack', 'Alert escalation storyboard'],
+                    hiFi: ['Live data cockpit (desktop and tablet)', 'Mobile executive digest', 'Motion spec for card transitions']
+                },
+                outcomes: [
+                    { label: 'Adoption', value: '+32%', detail: 'Ops teams consolidated reporting workflows into Lumen within six weeks.' },
+                    { label: 'Cycle time', value: '-41%', detail: 'Prep for weekly reviews dropped from 110 minutes to 65 minutes.' },
+                    { label: 'Confidence', value: '+18 NPS', detail: 'Exec sponsors rated trust in telemetry 18 points higher post-launch.' }
+                ],
+                learnings: [
+                    'Pair telemetry with story-driven prototypes to unblock prioritization debates.',
+                    'Instrument every friction point in the ritual so you can prove before and after ROI.',
+                    'Ship open data provenance quickly, because transparency is the fastest trust builder.'
+                ]
+            },
+            nova: {
+                title: 'Nova Health Companion',
+                tagline: 'A calm coach that turns biometrics into empathetic rituals.',
+                description: 'Nova helps patients translate biometric spikes into tiny, doable steps across phone and wearable surfaces.',
+                summary: 'Designed a calm, assistive mobile experience translating biometrics into empathetic guidance.',
+                tools: ['Figma', 'FigJam', 'Maze', 'After Effects'],
+                role: 'Lead Product Designer',
+                timeline: '6 sprint cycles',
+                impact: '41% increase in daily adherence',
+                overview: 'Nova ingests wearable data, medication schedules, and clinician notes to build a ritual playlist for each patient. The work combined service design with motion to convey reassurance.',
+                problem: 'Patients saw jagged charts with no interpretation, resulting in anxiety and abandoned care plans.',
+                featureLabel: 'Empathetic ritual playlist',
+                problemLabel: 'Interview wall and mood map',
+                goals: [
+                    { title: 'Reduce anxiety', description: 'Translate spikes into plain-language guidance and breathing room.' },
+                    { title: 'Drive adherence', description: 'Reward streaks and make rituals stackable across the week.' },
+                    { title: 'Create shared context', description: 'Give clinicians and caregivers a synchronized view of progress.' }
+                ],
+                userProblems: [
+                    'Wearable alerts fired without a why, so users ignored them.',
+                    'Rigid routines ignored flare-ups or travel days, causing guilt spirals.',
+                    'Caregivers had no clue if instructions were followed until the next appointment.'
+                ],
+                persona: {
+                    name: 'Jordan Ellis',
+                    role: 'Remote patient living with hypertension',
+                    bio: 'Balances contract work with medical appointments and needs rituals that flex around unpredictable energy.',
+                    goals: ['Keep vitals in agreed ranges', 'Avoid alarm fatigue', 'Share clear updates with clinician'],
+                    quote: 'If the app panics, I panic. I need a coach, not a siren.'
+                },
+                researchHighlights: [
+                    { title: '8 diary studies', detail: 'Captured how patients react to biometric spikes in the moment.' },
+                    { title: 'Care-team workshops', detail: 'Co-created escalation ladders with nurses and caregivers.' },
+                    { title: 'Accessibility review', detail: 'Ensured color, copy, and motion supported low-vision patients.' }
+                ],
+                process: [
+                    { phase: 'Discover', detail: 'Diary study, service blueprint, emotion mapping.' },
+                    { phase: 'Define', detail: 'Co-authored rituals with clinicians and prioritized alerts.' },
+                    { phase: 'Design', detail: 'Motion prototypes for calm feedback loops.' },
+                    { phase: 'Validate', detail: 'Remote usability and biometric stress testing.' }
+                ],
+                solutionIntro: 'We choreographed interventions that flex with patient bandwidth while keeping clinicians in the loop.',
+                solutions: [
+                    { title: 'Welcome back ritual', detail: 'Morning check-in blends breath work with medication reminders.' },
+                    { title: 'Contextual nudges', detail: 'Alerts use empathetic tone and cite the biometric driving the suggestion.' },
+                    { title: 'Cheat-day planner', detail: 'Patients can reschedule rituals and log why to keep streak logic intact.' },
+                    { title: 'Care circle updates', detail: 'One tap sends a status card to loved ones or clinicians.' },
+                    { title: 'Content studio', detail: 'Library of short clinician videos and success stories for inspiration.' },
+                    { title: 'Challenge hub', detail: 'Gamified weekly challenges with incentives from insurers.' },
+                    { title: 'Quiet hours', detail: 'Adaptive notification schedule that honors rest windows.' }
+                ],
+                deliverables: {
+                    lowFi: ['Service blueprint', 'Adaptive ritual flow', 'Escalation ladder wireframes'],
+                    hiFi: ['Calm UI kit', 'Wearable companion screens', 'Motion spec for vital alerts']
+                },
+                outcomes: [
+                    { label: 'Adherence', value: '+41%', detail: 'Daily ritual completion jumped after launch.' },
+                    { label: 'Alert fatigue', value: '-36%', detail: 'Noise-aware nudges cut ignored alerts dramatically.' },
+                    { label: 'CSAT', value: '4.7/5', detail: 'Patients rated the experience as supportive and clear.' }
+                ],
+                learnings: [
+                    'Language cues mood, so rewrite alerts until they feel like a human coach.',
+                    'Let patients bend the plan without breaking measurement.',
+                    'Clinician co-design keeps trust high when sharing biometric data.'
+                ]
+            },
+            aero: {
+                title: 'Aero Essential Store',
+                tagline: 'Editorial storytelling for high-consideration retail.',
+                description: 'We blended tactile commerce with immersive content so shoppers could feel craftsmanship before purchase.',
+                summary: 'Elevated a premium retail brand with editorial storytelling and tactile commerce patterns.',
+                tools: ['Figma', 'After Effects', 'WebGL', 'Photoshop'],
+                role: 'Principal UX/UI Designer',
+                timeline: '10-week engagement',
+                impact: '18% uplift in AOV',
+                overview: 'Aero sells travel essentials built with aerospace-grade materials. The new storefront pairs cinematic layouts with guided fit to increase confidence.',
+                problem: 'The previous e-commerce template buried the brand story and gave shoppers no context on feel or fit.',
+                featureLabel: 'Hero module and responsive grid',
+                problemLabel: 'Experience storyboard and swatch wall',
+                goals: [
+                    { title: 'Lead with narrative', description: 'Introduce each product with a crafted vignette.' },
+                    { title: 'Build tactile confidence', description: 'Show texture, scale, and packing scenarios interactively.' },
+                    { title: 'Streamline checkout', description: 'Remove friction so cross-device shoppers glide through payment.' }
+                ],
+                userProblems: [
+                    'All products felt identical in the grid with no sense of craft.',
+                    'Sizing and fit guidance lived in PDF spec sheets.',
+                    'Mobile checkout forced five different panels and restarts.'
+                ],
+                persona: {
+                    name: 'Nadia Byrne',
+                    role: 'Creative director and frequent traveler',
+                    bio: 'Moves between shoots weekly and invests in gear that blends form with longevity.',
+                    goals: ['Understand materials before purchase', 'See how items style with the collection', 'Check out privately on any device'],
+                    quote: 'If I can see the textures breathe and know it will fit the cabin, I am sold.'
+                },
+                researchHighlights: [
+                    { title: 'Shop-alongs', detail: 'Observed seven customers shopping luxury competitors online.' },
+                    { title: '3D scans', detail: 'Captured textures and lighting to inform interactive swatches.' },
+                    { title: 'Checkout teardown', detail: 'Benchmarked best-in-class express flows to remove steps.' }
+                ],
+                process: [
+                    { phase: 'Discover', detail: 'Brand immersion, conversion audit, qualitative shop-alongs.' },
+                    { phase: 'Define', detail: 'Storyboarded hero narratives and prioritized merch rules.' },
+                    { phase: 'Design', detail: 'Built modular editorial blocks with a WebGL product viewer.' },
+                    { phase: 'Validate', detail: 'Ran moderated usability plus multivariate checkout test.' }
+                ],
+                solutionIntro: 'We built a modular system that blends visual storytelling with utility so every launch feels curated.',
+                solutions: [
+                    { title: 'Hero story rail', detail: 'Scroll-triggered panels that reveal craftsmanship details.' },
+                    { title: 'Lookbook grid', detail: 'Swappable editorial layouts for merch teams to mix quickly.' },
+                    { title: 'Smart fit guide', detail: 'Interactive quiz and cabin-fit AR preview.' },
+                    { title: 'Packing planner', detail: 'Drag items into the case to test volume and pairings.' },
+                    { title: 'Texture swatches', detail: 'WebGL viewer that reacts to cursor and device motion.' },
+                    { title: 'Express checkout', detail: 'One adaptive panel across mobile and desktop with wallet support.' },
+                    { title: 'Membership moments', detail: 'Loyalty stories woven into PDP to highlight premium tier.' }
+                ],
+                deliverables: {
+                    lowFi: ['Content hierarchy wireframes', 'Merch rules system', 'Checkout storyboard'],
+                    hiFi: ['Editorial design system', '3D viewer UI', 'Animation spec for hero rail']
+                },
+                outcomes: [
+                    { label: 'Avg. order value', value: '+18%', detail: 'Bundles increased as shoppers paired complementary pieces.' },
+                    { label: 'Checkout speed', value: '-27%', detail: 'Single-panel checkout cut abandonments significantly.' },
+                    { label: 'Brand engagement', value: '+42%', detail: 'Visitors spent longer exploring interactive narratives.' }
+                ],
+                learnings: [
+                    'Give merch teams flexible storytelling blocks so they can iterate weekly.',
+                    'Interactive fit guidance reduces returns more than discounting.',
+                    'Motion guidelines keep premium stories feeling intentional rather than flashy.'
+                ]
+            }
+        };
+
+        const data = STUDIES[slug] || STUDIES.lumen;
+
+        const qs = id => document.getElementById(id);
+        qs('case-title').textContent = data.title;
+        qs('case-tagline').textContent = data.tagline;
+        qs('case-description').textContent = data.description;
+        qs('case-role').textContent = data.role;
+        qs('case-timeline').textContent = data.timeline;
+        qs('case-impact').textContent = data.impact;
+        qs('case-overview').textContent = data.overview;
+        qs('case-problem').textContent = data.problem;
+        qs('feature-visual').setAttribute('data-label', data.featureLabel || 'Concept hero');
+        qs('problem-visual').setAttribute('data-label', data.problemLabel || 'Research focus');
+        qs('solutions-intro').textContent = data.solutionIntro || data.summary;
+        qs('persona-name').textContent = data.persona.name;
+        qs('persona-role').textContent = data.persona.role;
+        qs('persona-bio').textContent = data.persona.bio;
+        qs('persona-quote').textContent = data.persona.quote;
+
+        const personaGoals = qs('persona-goals');
+        personaGoals.innerHTML = '';
+        data.persona.goals.forEach(goal => {
+            const li = document.createElement('li');
+            li.textContent = goal;
+            personaGoals.appendChild(li);
+        });
+
+        const heroTools = qs('case-tools');
+        heroTools.innerHTML = '';
+        (data.tools || []).forEach(tool => {
+            const span = document.createElement('span');
+            span.textContent = tool;
+            heroTools.appendChild(span);
+        });
+
+        const goalsWrap = qs('case-goals');
+        goalsWrap.innerHTML = '';
+        (data.goals || []).forEach(goal => {
+            const card = document.createElement('div');
+            card.className = 'goal-card';
+            card.innerHTML = `<div class="goal-icon">★</div><h4>${goal.title}</h4><p>${goal.description}</p>`;
+            goalsWrap.appendChild(card);
+        });
+
+        const problems = qs('case-user-problems');
+        problems.innerHTML = '';
+        (data.userProblems || []).forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            problems.appendChild(li);
+        });
+
+        const researchList = qs('case-research');
+        researchList.innerHTML = '';
+        (data.researchHighlights || []).forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${item.title}:</strong> ${item.detail}`;
+            researchList.appendChild(li);
+        });
+
+        const processWrap = qs('case-process');
+        processWrap.innerHTML = '';
+        (data.process || []).forEach(step => {
+            const div = document.createElement('div');
+            div.className = 'process-step';
+            div.innerHTML = `<p>${step.phase}</p><p>${step.detail}</p>`;
+            processWrap.appendChild(div);
+        });
+
+        const solutionWrap = qs('case-solutions');
+        solutionWrap.innerHTML = '';
+        (data.solutions || []).forEach(solution => {
+            const div = document.createElement('div');
+            div.className = 'solution-card';
+            div.innerHTML = `<h4>${solution.title}</h4><p>${solution.detail}</p>`;
+            solutionWrap.appendChild(div);
+        });
+
+        const lowFiWrap = qs('case-lowfi');
+        lowFiWrap.innerHTML = '';
+        (data.deliverables?.lowFi || []).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'artifact-thumb';
+            div.textContent = item;
+            lowFiWrap.appendChild(div);
+        });
+
+        const hiFiWrap = qs('case-hifi');
+        hiFiWrap.innerHTML = '';
+        (data.deliverables?.hiFi || []).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'artifact-thumb';
+            div.textContent = item;
+            hiFiWrap.appendChild(div);
+        });
+
+        const outcomeWrap = qs('case-outcomes');
+        outcomeWrap.innerHTML = '';
+        (data.outcomes || []).forEach(metric => {
+            const div = document.createElement('div');
+            div.className = 'metric-card';
+            div.innerHTML = `<h4>${metric.value}</h4><p>${metric.label}</p><p>${metric.detail}</p>`;
+            outcomeWrap.appendChild(div);
+        });
+
+        const learningsWrap = qs('case-learnings');
+        learningsWrap.innerHTML = '';
+        (data.learnings || []).forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            learningsWrap.appendChild(li);
+        });
+
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        const bodyEl = document.body;
+        const toggle = document.querySelector('.theme-toggle');
+        toggle.addEventListener('click', () => {
+            bodyEl.classList.toggle('theme-dark');
+            bodyEl.classList.add('theme-transition');
+            setTimeout(() => bodyEl.classList.remove('theme-transition'), 500);
+        });
+    </script>
+</body>
+</html>
