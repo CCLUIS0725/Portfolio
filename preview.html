@@ -1,33 +1,152 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Luis Cabrera | UX/UI Portfolio</title>
+    <title>Preview | Luis Cabrera</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Preview Overrides */
+        :root {
+            --font-sans: "Inter", sans-serif;
+            --font-display: "Space Grotesk", sans-serif;
+            /* Ensure these match or are slightly tweaked */
+        }
+
+        /* Typography Enhancements */
+        body {
+            font-size: 16px;
+            /* Ensure base size */
+            color: #1f2937;
+            /* Slightly darker text for better contrast */
+        }
+
+        h1,
+        h2,
+        h3 {
+            letter-spacing: -0.03em;
+            /* Tighter tracking for modern feel */
+        }
+
+        /* Hero Section Updates */
+        .hero-visual {
+            background: none;
+            /* Remove the gradient background */
+            box-shadow: none;
+            /* Remove the box shadow from the container */
+            overflow: visible;
+            /* Allow image to breathe if needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-visual img:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-visual::after {
+            display: none;
+            /* Remove the text overlay */
+        }
+
+        /* Project Card Updates */
+        .project-card {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--accent);
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        /* Skills Grid Clean Update */
+        .skills-grid-clean {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        .skill-icon {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        /* Hide old skills */
+        .skills-cloud,
+        .skills-bars {
+            display: none;
+        }
+
+        /* Dark mode adjustments for preview */
+        .theme-dark body {
+            color: #f3f4f6;
+        }
+
+        .theme-dark .project-card {
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
 </head>
 
 <body>
     <div class="page">
         <header>
             <div class="logo">LC / UX</div>
-            <button class="theme-toggle" aria-label="Toggle dark mode">
-                <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                    </path>
-                </svg>
-                <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                    </path>
-                </svg>
+            <button class="theme-toggle" aria-label="Toggle color mode">
+                <span class="toggle-thumb"></span>
+                <span class="toggle-icon">☀️</span>
+                <span class="toggle-icon">🌙</span>
             </button>
         </header>
         <div class="scroll-progress" aria-hidden="true">
@@ -56,7 +175,9 @@
                             <button class="btn btn-outline">Download Résumé</button>
                         </div>
                     </div>
-                    <div class="hero-visual" aria-hidden="true"></div>
+                    <div class="hero-visual" aria-hidden="true">
+                        <img src="assets/images/hero-preview.png" alt="Abstract Design Visual" />
+                    </div>
                 </div>
             </section>
 
@@ -110,7 +231,13 @@
                                     Redefined the analytics workflow with adaptive panels, modular layouts,
                                     and motion cues that accelerate decision-making.
                                 </p>
-                                <a class="btn btn-outline" href="case-study.html?project=lumen">
+                                <div class="project-tags">
+                                    <span class="project-tag">SaaS</span>
+                                    <span class="project-tag">Data Viz</span>
+                                    <span class="project-tag">Enterprise</span>
+                                </div>
+                                <a class="btn btn-outline" href="case-study.html?project=lumen"
+                                    style="margin-top: 1rem;">
                                     View Case Study
                                 </a>
                             </div>
@@ -123,7 +250,13 @@
                                     Crafted a calm, assistive patient companion with biometric insights,
                                     proactive nudges, and ambient storytelling.
                                 </p>
-                                <a class="btn btn-outline" href="case-study.html?project=nova">
+                                <div class="project-tags">
+                                    <span class="project-tag">Mobile App</span>
+                                    <span class="project-tag">HealthTech</span>
+                                    <span class="project-tag">iOS</span>
+                                </div>
+                                <a class="btn btn-outline" href="case-study.html?project=nova"
+                                    style="margin-top: 1rem;">
                                     View Case Study
                                 </a>
                             </div>
@@ -136,7 +269,13 @@
                                     Designed a high-conversion shopping journey with editorial storytelling,
                                     augmented fit guidance, and tactile micro-interactions.
                                 </p>
-                                <a class="btn btn-outline" href="case-study.html?project=aero">
+                                <div class="project-tags">
+                                    <span class="project-tag">E-commerce</span>
+                                    <span class="project-tag">Web Design</span>
+                                    <span class="project-tag">Interaction</span>
+                                </div>
+                                <a class="btn btn-outline" href="case-study.html?project=aero"
+                                    style="margin-top: 1rem;">
                                     View Case Study
                                 </a>
                             </div>
@@ -154,44 +293,55 @@
                             end-to-end.
                         </p>
                     </div>
-                    <div class="skills-grid">
-                        <div class="skills-cloud">
-                            <span class="skill-pill reveal">UX Research</span>
-                            <span class="skill-pill reveal">UI Design</span>
-                            <span class="skill-pill reveal">Design Systems</span>
-                            <span class="skill-pill reveal">Rapid Prototyping</span>
-                            <span class="skill-pill reveal">Figma</span>
-                            <span class="skill-pill reveal">Adobe XD</span>
-                            <span class="skill-pill reveal">HTML / CSS / JS</span>
-                            <span class="skill-pill reveal">Micro-interactions</span>
-                            <span class="skill-pill reveal">Motion Design</span>
+                    <div class="skills-grid-clean" style="margin-top: 2rem;">
+                        <div class="skill-category reveal">
+                            <h3>Research & Strategy</h3>
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>User Interviews
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Usability Testing
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Information Architecture
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Journey Mapping
+                                </div>
+                            </div>
                         </div>
-                        <div class="skills-bars">
-                            <div class="skill-bar reveal" data-level="92">
-                                <div class="skill-meta">
-                                    <span>Experience Strategy</span>
-                                    <span class="skill-level">0%</span>
+                        <div class="skill-category reveal">
+                            <h3>UI & Interaction</h3>
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Visual Design
                                 </div>
-                                <div class="bar-track">
-                                    <span class="bar-fill"></span>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Design Systems
                                 </div>
-                            </div>
-                            <div class="skill-bar reveal" data-level="88">
-                                <div class="skill-meta">
-                                    <span>Design Systems</span>
-                                    <span class="skill-level">0%</span>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Prototyping
                                 </div>
-                                <div class="bar-track">
-                                    <span class="bar-fill"></span>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Motion Design
                                 </div>
                             </div>
-                            <div class="skill-bar reveal" data-level="84">
-                                <div class="skill-meta">
-                                    <span>Motion / Prototyping</span>
-                                    <span class="skill-level">0%</span>
+                        </div>
+                        <div class="skill-category reveal">
+                            <h3>Tools & Tech</h3>
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Figma
                                 </div>
-                                <div class="bar-track">
-                                    <span class="bar-fill"></span>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>HTML/CSS
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Webflow
+                                </div>
+                                <div class="skill-item">
+                                    <div class="skill-icon"></div>Adobe Suite
                                 </div>
                             </div>
                         </div>
@@ -230,9 +380,9 @@
                             motion systems.
                         </p>
                         <div class="social-links">
-                            <a href="#">LinkedIn ?</a>
-                            <a href="#">Dribbble ?</a>
-                            <a href="#">Behance ?</a>
+                            <a href="#">LinkedIn ↗</a>
+                            <a href="#">Dribbble ↗</a>
+                            <a href="#">Behance ↗</a>
                         </div>
                     </div>
                 </div>
