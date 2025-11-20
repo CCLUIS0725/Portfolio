@@ -13,3 +13,5 @@ build/
 
 # VS Code
 .vscode/
+
+portfolio-previews/.vite/
