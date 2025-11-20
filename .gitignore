@@ -15,3 +15,5 @@ build/
 .vscode/
 
 portfolio-previews/.vite/
+
+portfolio-previews/node_modules/
