@@ -1,156 +1,187 @@
-import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Box, Layers, Zap, Globe } from 'lucide-react';
+import { Compass, Anchor, Wind, Navigation, Star, Rocket, CircleDashed, ArrowRight } from 'lucide-react';
+import TreasureMapScene from '../components/TreasureMapScene';
 
-const Card3D = ({ children, className }) => {
-    const ref = useRef(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
+// --- Components ---
 
-    const mouseXSpring = useSpring(x);
-    const mouseYSpring = useSpring(y);
-
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"]);
-
-    const handleMouseMove = (e) => {
-        const rect = ref.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const xPct = mouseX / width - 0.5;
-        const yPct = mouseY / height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
-
+// Steampunk/Nautical Card
+const EtheriumCard = ({ title, category, icon: Icon, delay }) => {
     return (
         <motion.div
-            ref={ref}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{
-                rotateY,
-                rotateX,
-                transformStyle: "preserve-3d",
-            }}
-            className={`relative transition-all duration-200 ease-out ${className}`}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay, duration: 0.8 }}
+            whileHover={{ y: -10 }}
+            className="relative group"
         >
-            <div style={{ transform: "translateZ(75px)", transformStyle: "preserve-3d" }}>
-                {children}
+            {/* Card Frame */}
+            <div
+                className="absolute inset-0 bg-[#1a1a2e] border border-[#B8860B]/30 transition-all group-hover:border-[#FFD700]/60 group-hover:shadow-[0_0_20px_rgba(184,134,11,0.2)]"
+                style={{ clipPath: "polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%)" }}
+            ></div>
+
+            {/* Content */}
+            <div className="relative p-8 h-full flex flex-col justify-between z-10">
+                <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 bg-[#B8860B]/10 rounded-full border border-[#B8860B]/20 text-[#FFD700]">
+                        <Icon size={24} />
+                    </div>
+                    <Compass className="text-[#B8860B]/40 animate-spin-slow" size={20} />
+                </div>
+
+                <div>
+                    <div className="text-[#00F0FF] text-xs font-mono tracking-widest mb-2 uppercase">{category}</div>
+                    <h3 className="text-2xl font-serif text-[#E0E0E0] mb-4 group-hover:text-[#FFD700] transition-colors">{title}</h3>
+                    <Link to="/preview10/case-study" className="text-[#B8860B] text-sm font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                        SET COURSE <ArrowRight size={14} />
+                    </Link>
+                </div>
             </div>
+
+            {/* Decorative Corner */}
+            <div
+                className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-[#B8860B]/20 to-transparent"
+                style={{ clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }}
+            ></div>
         </motion.div>
     );
 };
 
 export default function Preview10() {
+    const { scrollYProgress } = useScroll();
+
     return (
-        <div className="preview-10 min-h-screen bg-[#0f0f11] text-white font-sans overflow-hidden perspective-1000">
-            {/* Ambient Background */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse-slow"></div>
-                <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[100px] animate-pulse-slow delay-1000"></div>
+        <div className="preview-10 min-h-screen bg-[#0B0B15] text-[#E0E0E0] font-sans overflow-x-hidden selection:bg-[#B8860B]/30 relative">
+
+            {/* Background: The Etherium */}
+            <div className="fixed inset-0 z-0">
+                <TreasureMapScene scrollYProgress={scrollYProgress} />
+
+                {/* Nebula Clouds (Overlay on top of 3D scene for depth) */}
+                <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-purple-900/20 rounded-full blur-[150px] mix-blend-screen animate-pulse-slow pointer-events-none"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-amber-700/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow delay-1000 pointer-events-none"></div>
+                <div className="absolute top-[40%] left-[60%] w-[600px] h-[600px] bg-cyan-900/20 rounded-full blur-[100px] mix-blend-screen pointer-events-none"></div>
+
+                {/* Stars Texture Overlay */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 pointer-events-none"></div>
             </div>
 
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 p-8 flex justify-between items-center">
-                <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
-                    SPATIAL_UI
+            {/* Navigation: The Helm */}
+            <nav className="fixed top-0 left-0 right-0 z-50 p-8 flex justify-between items-center border-b border-[#B8860B]/10 bg-[#0B0B15]/80 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                    <Anchor className="text-[#FFD700]" size={24} />
+                    <span className="text-xl font-serif font-bold tracking-widest text-[#FFD700]">R.L.S. LEGACY</span>
                 </div>
-                <div className="flex gap-8 text-sm font-medium text-gray-400">
-                    <a href="#home" className="hover:text-white transition-colors">Home</a>
-                    <a href="#projects" className="hover:text-white transition-colors">Projects</a>
-                    <a href="#about" className="hover:text-white transition-colors">About</a>
+                <div className="hidden md:flex gap-8 text-sm font-mono tracking-widest text-[#B8860B]">
+                    <a href="#home" className="hover:text-[#FFD700] transition-colors">COORDINATES</a>
+                    <a href="#work" className="hover:text-[#FFD700] transition-colors">LOGBOOK</a>
+                    <a href="#about" className="hover:text-[#FFD700] transition-colors">CREW</a>
                 </div>
+                <button className="px-6 py-2 border border-[#B8860B] text-[#FFD700] font-mono text-xs hover:bg-[#B8860B]/10 transition-colors rounded-sm">
+                    ENGAGE SOLAR SAILS
+                </button>
             </nav>
 
             {/* Hero Section */}
-            <section id="home" className="min-h-screen flex items-center justify-center relative z-10 px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
-                    <div>
+            <section id="home" className="min-h-screen flex items-center justify-center relative z-10 px-6 pt-20 pointer-events-none">
+                <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+                    {/* Text Content */}
+                    <div className="pointer-events-auto">
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
+                            initial={{ opacity: 0, x: -50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 1 }}
                         >
-                            <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
-                                Next Level <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-                                    Interaction
-                                </span>
+                            <div className="inline-flex items-center gap-2 text-[#00F0FF] font-mono text-xs tracking-[0.3em] mb-6">
+                                <Star size={12} />
+                                <span>ETHERIUM SECTOR 7</span>
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-[#F4A460] to-[#8B4513]">
+                                Charting the <br /> Unknown
                             </h1>
-                            <p className="text-xl text-gray-400 mb-8 max-w-lg">
-                                Exploring the boundaries of web design with 3D transforms, depth, and motion.
+                            <p className="text-lg text-[#B8860B] mb-8 max-w-lg font-serif italic border-l-2 border-[#B8860B]/30 pl-6">
+                                "I've got the makings of greatness in me, but you got the helm." <br />
+                                Designing interfaces for the next frontier.
                             </p>
-                            <button className="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">
-                                Explore Work
-                            </button>
+
+                            <div className="flex gap-4">
+                                <button className="px-8 py-4 bg-[#B8860B] text-[#0B0B15] font-bold font-mono rounded-sm hover:bg-[#FFD700] transition-colors shadow-[0_0_20px_rgba(184,134,11,0.4)]">
+                                    VIEW MAP
+                                </button>
+                                <button className="px-8 py-4 border border-[#B8860B]/50 text-[#B8860B] font-bold font-mono rounded-sm hover:border-[#FFD700] hover:text-[#FFD700] transition-colors">
+                                    CONTACT
+                                </button>
+                            </div>
                         </motion.div>
                     </div>
 
-                    <div className="h-[500px] flex items-center justify-center perspective-1000">
-                        <Card3D className="w-80 h-96 bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl border border-gray-700 shadow-2xl flex flex-col items-center justify-center p-8">
-                            <Box className="w-24 h-24 text-purple-400 mb-6" />
-                            <h3 className="text-2xl font-bold mb-2">3D Card</h3>
-                            <p className="text-center text-gray-400">Hover over me to see the perspective effect in action.</p>
-                        </Card3D>
-                    </div>
-                </div>
-            </section>
+                    {/* Spacer for where the map visually sits (but map is now in background) */}
+                    <div className="h-[500px] w-full flex justify-center items-center relative pointer-events-none">
+                        {/* Floating Data Points - kept as UI overlay */}
+                        <motion.div
+                            animate={{ y: [-10, 10, -10] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-10 right-10 p-4 bg-[#0B0B15]/80 border border-[#00F0FF]/30 backdrop-blur-md rounded-lg pointer-events-auto"
+                        >
+                            <div className="text-[#00F0FF] text-xs font-mono mb-1">TRAJECTORY</div>
+                            <div className="text-white font-mono">45.2° N</div>
+                        </motion.div>
 
-            {/* Features Section */}
-            <section className="py-32 px-6 relative z-10">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { icon: <Layers />, title: "Depth", desc: "Adding dimension to flat interfaces." },
-                            { icon: <Zap />, title: "Performance", desc: "Silky smooth 60fps animations." },
-                            { icon: <Globe />, title: "Universal", desc: "Works across all modern devices." }
-                        ].map((item, i) => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ y: -10 }}
-                                className="p-8 bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-2xl hover:border-purple-500/50 transition-colors"
-                            >
-                                <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6 text-purple-400">
-                                    {item.icon}
-                                </div>
-                                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                                <p className="text-gray-400">{item.desc}</p>
-                            </motion.div>
-                        ))}
+                        <motion.div
+                            animate={{ y: [10, -10, 10] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute bottom-10 left-10 p-4 bg-[#0B0B15]/80 border border-[#B8860B]/30 backdrop-blur-md rounded-lg pointer-events-auto"
+                        >
+                            <div className="text-[#B8860B] text-xs font-mono mb-1">WIND SPEED</div>
+                            <div className="text-white font-mono">12 KNOTS</div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* Projects Section */}
-            <section id="projects" className="py-32 px-6 relative z-10">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-16 text-center">Selected Projects</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {[1, 2, 3, 4].map((item) => (
-                            <Card3D key={item} className="h-80 w-full bg-gray-900 rounded-3xl border border-gray-800 overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <div className="h-full flex flex-col justify-end p-8">
-                                    <h3 className="text-3xl font-bold mb-2">Project {item}</h3>
-                                    <p className="text-gray-400">An experimental interface design.</p>
-                                </div>
-                                <Link to="/preview10/case-study" className="absolute inset-0 z-20" aria-label={`View Case Study for Project ${item}`}></Link>
-                            </Card3D>
-                        ))}
+            <section id="work" className="py-32 px-6 relative z-10">
+                <div className="container mx-auto max-w-7xl">
+                    <div className="flex items-center gap-4 mb-16">
+                        <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#B8860B]/50 to-transparent"></div>
+                        <h2 className="text-3xl font-serif text-[#FFD700] tracking-widest uppercase">Expeditions</h2>
+                        <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#B8860B]/50 to-transparent"></div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <EtheriumCard
+                            title="Solar Surfer"
+                            category="Web Application"
+                            icon={Wind}
+                            delay={0.2}
+                        />
+                        <EtheriumCard
+                            title="Montressor Spaceport"
+                            category="E-Commerce"
+                            icon={Rocket}
+                            delay={0.4}
+                        />
+                        <EtheriumCard
+                            title="Galactic Compass"
+                            category="Mobile App"
+                            icon={Navigation}
+                            delay={0.6}
+                        />
                     </div>
                 </div>
             </section>
 
-            <footer className="py-12 text-center text-gray-500 text-sm relative z-10">
-                <p>Experimental Preview • 2024</p>
+            {/* Footer */}
+            <footer className="py-12 text-center relative z-10 border-t border-[#B8860B]/10 bg-[#0B0B15]">
+                <div className="flex justify-center items-center gap-2 mb-4 text-[#B8860B]">
+                    <CircleDashed className="animate-spin-slow" />
+                </div>
+                <p className="text-[#B8860B]/50 text-xs font-mono tracking-[0.2em]">
+                    EST. 3024 • MONTRESSOR SECTOR
+                </p>
             </footer>
         </div>
     );
