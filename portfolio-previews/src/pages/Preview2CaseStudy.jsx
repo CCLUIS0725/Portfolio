@@ -1,141 +1,168 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Github, Calendar, User, TrendingUp } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, Calendar, User, TrendingUp, Grid, FileText, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const BentoItem = ({ children, className = "", delay = 0 }) => (
+const SpecItem = ({ children, className = "", delay = 0, label }) => (
     <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay }}
-        className={`bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow ${className}`}
+        className={`bg-[#1e293b] border border-blue-400/30 p-6 relative group ${className}`}
     >
+        {label && (
+            <div className="absolute -top-3 left-4 bg-[#1e293b] px-2 text-[10px] font-bold text-blue-400 tracking-widest uppercase border border-blue-400/30">
+                {label}
+            </div>
+        )}
+
+        {/* Corner Accents */}
+        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-blue-400/30" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-blue-400/30" />
+
         {children}
     </motion.div>
 );
 
 export default function Preview2CaseStudy() {
     return (
-        <div className="preview-2 min-h-screen bg-gray-50 text-gray-900 font-sans p-4 md:p-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#0f172a] text-blue-100 font-mono p-4 md:p-8 selection:bg-blue-500/30">
+            {/* Background Grid */}
+            <div className="fixed inset-0 pointer-events-none z-0"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(96, 165, 250, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(96, 165, 250, 0.05) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                }}
+            />
+
+            <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header */}
-                <header className="flex justify-between items-center mb-12">
+                <header className="flex justify-between items-center mb-12 border-b border-blue-400/20 pb-6">
                     <Link
                         to="/preview2"
-                        className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all font-medium text-sm"
+                        className="flex items-center gap-2 px-4 py-2 border border-blue-400/30 text-blue-400 hover:bg-blue-400 hover:text-[#0f172a] transition-all text-xs font-bold tracking-widest uppercase"
                     >
-                        <ArrowLeft size={16} /> Back to Dashboard
+                        <ArrowLeft size={14} /> RETURN_TO_GRID
                     </Link>
-                    <div className="font-bold text-xl tracking-tight">Project Case Study</div>
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] text-blue-400/60 tracking-widest">CASE_FILE</span>
+                        <span className="font-bold text-lg tracking-tight text-blue-200">#CF-2024-01</span>
+                    </div>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                     {/* Hero Section */}
-                    <BentoItem className="md:col-span-8 md:row-span-2 bg-gradient-to-br from-blue-500 to-indigo-600 text-white !border-none min-h-[400px] flex flex-col justify-center">
+                    <SpecItem className="md:col-span-8 md:row-span-2 !bg-blue-900/20 flex flex-col justify-center min-h-[400px]" label="PROJECT_OVERVIEW">
                         <div className="max-w-2xl">
-                            <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold mb-6">
-                                CASE STUDY
+                            <div className="inline-block px-2 py-1 border border-blue-400 text-blue-400 text-[10px] font-bold tracking-widest mb-6">
+                                STATUS: DEPLOYED
                             </div>
-                            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                                Smart Home <br /> Control Hub
+                            <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-white">
+                                SMART_HOME <br />
+                                <span className="text-blue-400">CONTROL_HUB</span>
                             </h1>
-                            <p className="text-lg text-white/80 max-w-lg">
-                                A unified interface for managing IoT devices with intuitive automation and real-time energy monitoring.
+                            <p className="text-lg text-blue-200/70 max-w-lg leading-relaxed border-l-2 border-blue-400/30 pl-4">
+                                Unified interface for managing IoT devices. <br />
+                                Optimizing automation protocols and energy monitoring.
                             </p>
                         </div>
-                    </BentoItem>
+                    </SpecItem>
 
                     {/* Key Stats */}
-                    <BentoItem className="md:col-span-4 bg-gray-900 text-white !border-none" delay={0.1}>
+                    <SpecItem className="md:col-span-4" delay={0.1} label="METRICS">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="p-2 bg-white/10 rounded-lg">
-                                <TrendingUp size={24} className="text-green-400" />
+                            <div className="p-2 bg-blue-400/10 border border-blue-400/20">
+                                <TrendingUp size={20} className="text-blue-400" />
                             </div>
-                            <span className="text-xs font-bold text-gray-400 uppercase">Impact</span>
+                            <span className="text-[10px] font-bold text-blue-400/60 uppercase tracking-widest">IMPACT_FACTOR</span>
                         </div>
-                        <div className="text-4xl font-bold mb-1">+45%</div>
-                        <div className="text-sm text-gray-400">User Engagement</div>
-                    </BentoItem>
+                        <div className="text-4xl font-bold mb-1 text-white">+45%</div>
+                        <div className="text-xs text-blue-400/60 tracking-widest">USER_ENGAGEMENT</div>
+                    </SpecItem>
 
-                    <BentoItem className="md:col-span-2" delay={0.2}>
+                    <SpecItem className="md:col-span-2" delay={0.2} label="ROLE">
                         <div className="flex flex-col h-full justify-between">
-                            <User size={24} className="text-blue-500 mb-4" />
+                            <User size={20} className="text-blue-400 mb-4" />
                             <div>
-                                <div className="text-xs text-gray-500 uppercase font-bold mb-1">Role</div>
-                                <div className="font-bold">Lead UI</div>
+                                <div className="font-bold text-white">LEAD_UI</div>
                             </div>
                         </div>
-                    </BentoItem>
+                    </SpecItem>
 
-                    <BentoItem className="md:col-span-2" delay={0.3}>
+                    <SpecItem className="md:col-span-2" delay={0.3} label="TIMELINE">
                         <div className="flex flex-col h-full justify-between">
-                            <Calendar size={24} className="text-purple-500 mb-4" />
+                            <Calendar size={20} className="text-blue-400 mb-4" />
                             <div>
-                                <div className="text-xs text-gray-500 uppercase font-bold mb-1">Timeline</div>
-                                <div className="font-bold">8 Weeks</div>
+                                <div className="font-bold text-white">8_WEEKS</div>
                             </div>
                         </div>
-                    </BentoItem>
+                    </SpecItem>
 
                     {/* Overview */}
-                    <BentoItem className="md:col-span-6" delay={0.4}>
-                        <h3 className="text-xl font-bold mb-4">The Challenge</h3>
-                        <p className="text-gray-600 leading-relaxed">
-                            Users struggled to manage multiple smart devices from different manufacturers. The goal was to create a centralized hub that simplifies control and provides actionable insights into energy consumption.
+                    <SpecItem className="md:col-span-6" delay={0.4} label="PROBLEM_STMT">
+                        <h3 className="text-lg font-bold mb-4 text-blue-200">FRAGMENTATION</h3>
+                        <p className="text-sm text-blue-200/70 leading-relaxed">
+                            // ERROR: User struggle detected. <br />
+                            Multiple device ecosystems causing cognitive load. Need centralized command protocol.
                         </p>
-                    </BentoItem>
+                    </SpecItem>
 
-                    <BentoItem className="md:col-span-6" delay={0.5}>
-                        <h3 className="text-xl font-bold mb-4">The Solution</h3>
-                        <p className="text-gray-600 leading-relaxed">
-                            We designed a modular dashboard system using a bento-grid layout, allowing users to customize their view. We introduced "Smart Scenes" for one-tap automation of multiple devices.
+                    <SpecItem className="md:col-span-6" delay={0.5} label="SOLUTION_ARCH">
+                        <h3 className="text-lg font-bold mb-4 text-blue-200">MODULAR_DASHBOARD</h3>
+                        <p className="text-sm text-blue-200/70 leading-relaxed">
+                            // EXEC: Bento-grid layout implementation. <br />
+                            Customizable viewports. "Smart Scenes" macro execution.
                         </p>
-                    </BentoItem>
+                    </SpecItem>
 
                     {/* Visuals */}
-                    <BentoItem className="md:col-span-12 !p-0 overflow-hidden min-h-[500px] relative group" delay={0.6}>
-                        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-400 font-bold text-2xl">Main Interface Mockup</span>
+                    <SpecItem className="md:col-span-12 !p-0 overflow-hidden min-h-[500px] relative group border-dashed" delay={0.6} label="VISUAL_RENDER">
+                        <div className="absolute inset-0 bg-[#0f172a] flex items-center justify-center bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
+                            <div className="border-2 border-blue-400/20 w-3/4 h-3/4 flex items-center justify-center relative">
+                                <span className="text-blue-400/40 font-bold text-xl tracking-widest">[ INTERFACE_MOCKUP_PLACEHOLDER ]</span>
+                                {/* Crosshairs */}
+                                <div className="absolute -top-3 -left-3 text-blue-400">+</div>
+                                <div className="absolute -top-3 -right-3 text-blue-400">+</div>
+                                <div className="absolute -bottom-3 -left-3 text-blue-400">+</div>
+                                <div className="absolute -bottom-3 -right-3 text-blue-400">+</div>
+                            </div>
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/50 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                            <h3 className="text-2xl font-bold">High Fidelity Design</h3>
-                        </div>
-                    </BentoItem>
+                    </SpecItem>
 
                     {/* Process Steps */}
-                    <BentoItem className="md:col-span-4" delay={0.7}>
-                        <div className="text-4xl font-bold text-gray-200 mb-4">01</div>
-                        <h4 className="font-bold text-lg mb-2">Research</h4>
-                        <p className="text-sm text-gray-600">Competitor analysis and user interviews to understand pain points.</p>
-                    </BentoItem>
+                    <SpecItem className="md:col-span-4" delay={0.7} label="PHASE_01">
+                        <div className="text-2xl font-bold text-blue-500/20 mb-2">01</div>
+                        <h4 className="font-bold text-sm mb-2 text-blue-200">RESEARCH_DATA</h4>
+                        <p className="text-xs text-blue-200/60">Competitor analysis and user interviews to identify friction points.</p>
+                    </SpecItem>
 
-                    <BentoItem className="md:col-span-4" delay={0.8}>
-                        <div className="text-4xl font-bold text-gray-200 mb-4">02</div>
-                        <h4 className="font-bold text-lg mb-2">Wireframing</h4>
-                        <p className="text-sm text-gray-600">Low-fidelity sketches to iterate on layout and navigation.</p>
-                    </BentoItem>
+                    <SpecItem className="md:col-span-4" delay={0.8} label="PHASE_02">
+                        <div className="text-2xl font-bold text-blue-500/20 mb-2">02</div>
+                        <h4 className="font-bold text-sm mb-2 text-blue-200">WIREFRAMING</h4>
+                        <p className="text-xs text-blue-200/60">Low-fidelity schematics to iterate on layout and navigation flow.</p>
+                    </SpecItem>
 
-                    <BentoItem className="md:col-span-4" delay={0.9}>
-                        <div className="text-4xl font-bold text-gray-200 mb-4">03</div>
-                        <h4 className="font-bold text-lg mb-2">Prototyping</h4>
-                        <p className="text-sm text-gray-600">Interactive prototypes to test flows and micro-interactions.</p>
-                    </BentoItem>
+                    <SpecItem className="md:col-span-4" delay={0.9} label="PHASE_03">
+                        <div className="text-2xl font-bold text-blue-500/20 mb-2">03</div>
+                        <h4 className="font-bold text-sm mb-2 text-blue-200">PROTOTYPING</h4>
+                        <p className="text-xs text-blue-200/60">High-fidelity interactive models to test micro-interactions.</p>
+                    </SpecItem>
 
                     {/* Footer/CTA */}
-                    <BentoItem className="md:col-span-12 bg-gray-900 text-white flex flex-col md:flex-row items-center justify-between p-12" delay={1.0}>
+                    <SpecItem className="md:col-span-12 flex flex-col md:flex-row items-center justify-between p-12 bg-blue-900/10" delay={1.0} label="NEXT_STEPS">
                         <div>
-                            <h2 className="text-3xl font-bold mb-2">Ready to start a project?</h2>
-                            <p className="text-gray-400">Let's build something amazing together.</p>
+                            <h2 className="text-2xl font-bold mb-2 text-white">INITIATE_NEW_PROJECT?</h2>
+                            <p className="text-blue-200/60 text-sm">Collaborate on the next digital frontier.</p>
                         </div>
                         <div className="flex gap-4 mt-6 md:mt-0">
-                            <button className="px-6 py-3 bg-white text-gray-900 rounded-xl font-bold hover:bg-gray-100 transition-colors">
-                                Contact Me
+                            <button className="px-6 py-3 bg-blue-400 text-[#0f172a] font-bold hover:bg-white transition-colors text-xs tracking-widest uppercase">
+                                CONTACT_ME
                             </button>
-                            <Link to="/preview2" className="px-6 py-3 bg-gray-800 text-white rounded-xl font-bold hover:bg-gray-700 transition-colors">
-                                More Work
+                            <Link to="/preview2" className="px-6 py-3 border border-blue-400/30 text-blue-400 font-bold hover:bg-blue-400/10 transition-colors text-xs tracking-widest uppercase">
+                                VIEW_ARCHIVE
                             </Link>
                         </div>
-                    </BentoItem>
+                    </SpecItem>
                 </div>
             </div>
         </div>

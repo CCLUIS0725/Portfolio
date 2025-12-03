@@ -1,310 +1,290 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Play, Pause, RotateCcw, Trophy, Grid, User, Briefcase, Code, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, Zap, MessageCircle, Star, Layout, Code, Smartphone, Menu, Mail, Twitter, Youtube, Facebook, Instagram } from 'lucide-react';
 
-// Tetris Colors
-const COLORS = {
-    I: '#00FFFF', // Cyan
-    J: '#0000FF', // Blue
-    L: '#FFA500', // Orange
-    O: '#FFFF00', // Yellow
-    S: '#00FF00', // Green
-    T: '#800080', // Purple
-    Z: '#FF0000', // Red
-    BG: '#111111',
-    GRID: '#222222'
-};
+// --- Comic Components ---
 
-// Tetromino Shapes (Simplified for UI)
-const SHAPES = {
-    I: [[1, 1, 1, 1]],
-    O: [[1, 1], [1, 1]],
-    T: [[0, 1, 0], [1, 1, 1]],
-    L: [[0, 0, 1], [1, 1, 1]],
-    Z: [[1, 1, 0], [0, 1, 1]]
-};
+const WobblyButton = ({ children, className = "", onClick, color = "bg-yellow-400" }) => (
+    <motion.button
+        whileHover={{ scale: 1.05, rotate: Math.random() * 4 - 2 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={onClick}
+        className={`relative px-6 py-2 font-black uppercase tracking-wider border-4 border-black text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all ${color} ${className}`}
+        style={{
+            borderRadius: '255px 15px 225px 15px / 15px 225px 15px 255px'
+        }}
+    >
+        {children}
+    </motion.button>
+);
 
-const PixelText = ({ children, size = 'md', color = 'white', className = '' }) => {
-    const sizes = {
-        sm: 'text-xs md:text-sm',
-        md: 'text-base md:text-lg',
-        lg: 'text-2xl md:text-4xl',
-        xl: 'text-4xl md:text-6xl'
+const BurstButton = ({ children, className = "", onClick }) => (
+    <motion.button
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={onClick}
+        className={`relative px-8 py-4 font-black uppercase tracking-widest text-white bg-red-600 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] ${className}`}
+        style={{
+            clipPath: 'polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)',
+        }}
+    >
+        <div className="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+        <span className="relative z-10 flex items-center gap-2">
+            <Zap size={20} className="fill-yellow-400 text-black" />
+            {children}
+        </span>
+    </motion.button>
+);
+
+const SpeechBubble = ({ children, className = "", tailPosition = "bottom-left" }) => (
+    <div className={`bg-white border-4 border-black p-4 rounded-[2rem] relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${className}`}>
+        {children}
+        <div className={`absolute w-6 h-6 bg-white border-r-4 border-b-4 border-black transform rotate-45 
+            ${tailPosition === 'bottom-left' ? '-bottom-3 left-8' : ''}
+            ${tailPosition === 'bottom-right' ? '-bottom-3 right-8' : ''}
+            ${tailPosition === 'top-left' ? '-top-3 left-8 border-r-0 border-b-0 border-l-4 border-t-4' : ''}
+        `}></div>
+    </div>
+);
+
+// --- Layout Components ---
+
+const PanelContent = ({ children, className = "", bg = "bg-white" }) => (
+    <div className={`w-full h-full ${bg} p-8 flex flex-col justify-center relative overflow-hidden ${className}`}>
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+            backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2.5px)',
+            backgroundSize: '16px 16px'
+        }}></div>
+        <div className="relative z-10 w-full h-full flex flex-col">
+            {children}
+        </div>
+    </div>
+);
+
+const JaggedRow = ({ left, right, split = "diagonal", height = "h-96" }) => {
+    const getClipPaths = () => {
+        switch (split) {
+            case 'zigzag':
+                return {
+                    left: 'polygon(0 0, 65% 0, 45% 35%, 65% 65%, 40% 100%, 0 100%)',
+                    right: 'polygon(66% 0, 100% 0, 100% 100%, 41% 100%, 66% 65%, 46% 35%)'
+                };
+            case 'steep':
+                return {
+                    left: 'polygon(0 0, 40% 0, 60% 100%, 0 100%)',
+                    right: 'polygon(41% 0, 100% 0, 100% 100%, 61% 100%)'
+                };
+            case 'diagonal':
+            default:
+                return {
+                    left: 'polygon(0 0, 70% 0, 50% 100%, 0 100%)',
+                    right: 'polygon(71% 0, 100% 0, 100% 100%, 51% 100%)'
+                };
+        }
     };
 
+    const clips = getClipPaths();
+
     return (
-        <div className={`font-mono uppercase tracking-widest ${sizes[size]} text-${color} ${className}`} style={{ textShadow: '2px 2px 0px #000' }}>
-            {children}
+        <div className={`relative w-full ${height} bg-black border-b-4 border-black last:border-b-0 overflow-hidden flex`}>
+            <div className="absolute inset-0 bg-white" style={{ clipPath: clips.left, zIndex: 1 }}>{left}</div>
+            <div className="absolute inset-0 bg-white" style={{ clipPath: clips.right, zIndex: 1 }}>{right}</div>
         </div>
     );
 };
 
-const TetrisBlock = ({ color, delay = 0 }) => (
-    <motion.div
-        initial={{ y: -100, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ type: "spring", bounce: 0.4, duration: 0.8, delay }}
-        className="w-full h-full border-4 border-black relative"
-        style={{ backgroundColor: color }}
-    >
-        <div className="absolute top-0 left-0 w-full h-full border-t-4 border-l-4 border-white/30"></div>
-        <div className="absolute bottom-0 right-0 w-full h-full border-b-4 border-r-4 border-black/20"></div>
-    </motion.div>
-);
-
-const StatBox = ({ label, value, color }) => (
-    <div className="bg-black border-4 border-zinc-800 p-4 flex flex-col items-center justify-center gap-2 w-full">
-        <span className="text-zinc-500 font-mono text-xs">{label}</span>
-        <span className="font-mono text-xl md:text-2xl" style={{ color }}>{value}</span>
-    </div>
-);
-
-const ProjectCard = ({ title, role, tech, color, delay }) => {
+const TripleSlantRow = ({ items, height = "h-96" }) => {
     return (
-        <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay }}
-            className="group relative bg-black border-4 hover:translate-y-1 transition-transform"
-            style={{ borderColor: color }}
-        >
-            <div className="absolute -top-4 -right-4 w-8 h-8 bg-black border-4 flex items-center justify-center z-10" style={{ borderColor: color }}>
-                <div className="w-2 h-2 bg-white animate-pulse"></div>
+        <div className={`relative w-full ${height} bg-black border-b-4 border-black last:border-b-0 overflow-hidden flex`}>
+            {/* Floating Title Bubble - Normal Rectangular Shape */}
+            <div className="absolute top-6 left-12 z-20">
+                <div className="bg-white border-4 border-black px-8 py-4 transform -rotate-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] relative">
+                    <h3 className="font-['Bangers'] text-4xl tracking-wider text-black">SUPER PROJECTS</h3>
+                    {/* Triangle Tail */}
+                    <div className="absolute -bottom-4 left-8 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-black"></div>
+                    <div className="absolute -bottom-[10px] left-[34px] w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-t-[16px] border-t-white"></div>
+                </div>
             </div>
 
-            <div className="p-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
-                    <Grid size={48} color={color} />
-                </div>
-
-                <h3 className="font-mono text-xl mb-2 text-white">{title}</h3>
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></div>
-                    <span className="font-mono text-xs text-zinc-400">{role}</span>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                    {tech.map(t => (
-                        <span key={t} className="px-2 py-1 text-[10px] font-mono bg-zinc-900 text-zinc-300 border border-zinc-800">
-                            {t}
-                        </span>
-                    ))}
-                </div>
-
-                <Link to="/preview4/case-study" className="inline-flex items-center gap-2 font-mono text-sm hover:underline" style={{ color }}>
-                    <span>PRESS START</span>
-                    <ArrowRight size={14} />
-                </Link>
+            {/* Panel 1 */}
+            <div className="absolute inset-0 bg-white" style={{ clipPath: 'polygon(0 0, 35% 0, 25% 100%, 0 100%)', zIndex: 1 }}>
+                {items[0]}
             </div>
-        </motion.div>
+            {/* Panel 2 */}
+            <div className="absolute inset-0 bg-white" style={{ clipPath: 'polygon(36% 0, 70% 0, 60% 100%, 26% 100%)', zIndex: 1 }}>
+                {items[1]}
+            </div>
+            {/* Panel 3 */}
+            <div className="absolute inset-0 bg-white" style={{ clipPath: 'polygon(71% 0, 100% 0, 100% 100%, 61% 100%)', zIndex: 1 }}>
+                {items[2]}
+            </div>
+        </div>
     );
 };
 
 export default function Preview4() {
-    const [score, setScore] = useState(0);
-    const [lines, setLines] = useState(0);
-
     useEffect(() => {
-        const interval = setInterval(() => {
-            setScore(prev => prev + 10);
-        }, 1000);
-        return () => clearInterval(interval);
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700;900&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+        return () => document.head.removeChild(link);
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#111] text-white font-mono selection:bg-green-500 selection:text-black overflow-x-hidden">
-            {/* Grid Background */}
-            <div className="fixed inset-0 opacity-10 pointer-events-none"
-                style={{
-                    backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
-                    backgroundSize: '40px 40px'
-                }}
-            />
+        <div className="min-h-screen bg-slate-200 font-['Comic_Neue'] p-2 md:p-4 flex justify-center items-center">
 
-            {/* HUD / Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 border-b-4 border-zinc-800 p-4">
-                <div className="container mx-auto max-w-6xl flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 bg-red-500 border-2 border-white animate-pulse"></div>
-                        <span className="font-bold tracking-widest text-xl">PLAYER 1</span>
-                    </div>
+            {/* Comic Page Container */}
+            <div className="w-full max-w-[95%] bg-black border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.2)]">
 
-                    <div className="hidden md:flex gap-8">
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] text-zinc-500">SCORE</span>
-                            <span className="text-xl text-yellow-400">{score.toString().padStart(6, '0')}</span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] text-zinc-500">LINES</span>
-                            <span className="text-xl text-green-400">{lines.toString().padStart(3, '0')}</span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] text-zinc-500">LEVEL</span>
-                            <span className="text-xl text-cyan-400">05</span>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                        <button className="p-2 hover:bg-zinc-800 border-2 border-transparent hover:border-zinc-700 transition-colors">
-                            <Pause size={20} />
-                        </button>
-                        <button className="p-2 hover:bg-zinc-800 border-2 border-transparent hover:border-zinc-700 transition-colors">
-                            <RotateCcw size={20} />
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main className="pt-32 pb-20 container mx-auto px-6 max-w-5xl relative z-10">
-
-                {/* Hero Section */}
-                <section className="min-h-[80vh] flex flex-col justify-center mb-32">
-                    <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: "spring", duration: 0.8 }}
-                        className="border-8 border-double border-zinc-700 p-8 md:p-16 bg-black/80 backdrop-blur-sm max-w-4xl mx-auto text-center relative"
-                    >
-                        {/* Decorative Tetrominoes */}
-                        <div className="absolute -top-12 -left-12 w-24 h-24 grid grid-cols-2 gap-0 animate-bounce">
-                            <TetrisBlock color={COLORS.O} />
-                            <TetrisBlock color={COLORS.O} />
-                            <TetrisBlock color={COLORS.O} />
-                            <TetrisBlock color={COLORS.O} />
-                        </div>
-
-                        <PixelText size="sm" color="zinc-400" className="mb-4">INSERT COIN TO START</PixelText>
-                        <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight">
-                            <span className="text-red-500">G</span>
-                            <span className="text-orange-500">A</span>
-                            <span className="text-yellow-500">M</span>
-                            <span className="text-green-500">E</span>
-                            <br />
-                            <span className="text-cyan-500">D</span>
-                            <span className="text-blue-500">E</span>
-                            <span className="text-purple-500">V</span>
-                        </h1>
-                        <p className="font-mono text-zinc-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
-                            Building interactive digital experiences one block at a time.
-                            Full-stack developer with a high score in React & UI Design.
-                        </p>
-
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-transparent border-4 border-green-500 text-green-500 px-8 py-4 font-bold text-xl hover:bg-green-500 hover:text-black transition-all animate-pulse"
-                        >
-                            PRESS START
-                        </motion.button>
-                    </motion.div>
-                </section>
-
-                {/* Stats / Skills */}
-                <section className="mb-32">
-                    <div className="flex items-center gap-4 mb-12">
-                        <Trophy className="text-yellow-500" size={32} />
-                        <h2 className="text-3xl font-bold">HIGH SCORES</h2>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <StatBox label="REACT.JS" value="98%" color={COLORS.I} />
-                        <StatBox label="TYPESCRIPT" value="92%" color={COLORS.J} />
-                        <StatBox label="UI DESIGN" value="95%" color={COLORS.T} />
-                        <StatBox label="NODE.JS" value="88%" color={COLORS.S} />
-                    </div>
-                </section>
-
-                {/* Work / Levels */}
-                <section id="work" className="mb-32">
-                    <div className="flex items-center gap-4 mb-12">
-                        <Grid className="text-cyan-500" size={32} />
-                        <h2 className="text-3xl font-bold">LEVEL SELECT</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <ProjectCard
-                            title="NEON DASHBOARD"
-                            role="Frontend Lead"
-                            tech={['React', 'D3.js', 'Tailwind']}
-                            color={COLORS.I}
-                            delay={0.1}
-                        />
-                        <ProjectCard
-                            title="CRYPTO WALLET"
-                            role="UI Designer"
-                            tech={['Figma', 'Motion', 'Web3']}
-                            color={COLORS.L}
-                            delay={0.2}
-                        />
-                        <ProjectCard
-                            title="RETRO COMMERCE"
-                            role="Full Stack"
-                            tech={['Next.js', 'Stripe', 'Prisma']}
-                            color={COLORS.Z}
-                            delay={0.3}
-                        />
-                        <ProjectCard
-                            title="HEALTH TRACKER"
-                            role="Mobile Dev"
-                            tech={['React Native', 'Firebase']}
-                            color={COLORS.S}
-                            delay={0.4}
-                        />
-                    </div>
-                </section>
-
-                {/* About / Credits */}
-                <section className="mb-20 border-t-4 border-zinc-800 pt-20">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <div className="flex items-center gap-4 mb-8">
-                                <User className="text-purple-500" size={32} />
-                                <h2 className="text-3xl font-bold">PLAYER PROFILE</h2>
-                            </div>
-                            <p className="text-zinc-400 leading-loose mb-8 text-lg">
-                                &gt; INITIALIZING BIO...<br />
-                                &gt; LOADED.<br /><br />
-                                I'm a creative developer who treats every project like a new level to conquer.
-                                With a background in both design and engineering, I fit the pieces together
-                                to create seamless user experiences.
-                            </p>
-                            <div className="flex gap-4">
-                                <a href="#" className="p-3 border-2 border-zinc-700 hover:border-white hover:bg-white hover:text-black transition-all">
-                                    <Github size={24} />
-                                </a>
-                                <a href="#" className="p-3 border-2 border-zinc-700 hover:border-blue-500 hover:bg-blue-500 hover:text-white transition-all">
-                                    <Linkedin size={24} />
-                                </a>
-                                <a href="#" className="p-3 border-2 border-zinc-700 hover:border-red-500 hover:bg-red-500 hover:text-white transition-all">
-                                    <Mail size={24} />
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Avatar / Character */}
-                        <div className="relative aspect-square max-w-sm mx-auto border-4 border-zinc-800 bg-zinc-900 p-8 flex items-center justify-center">
-                            <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-1 p-1 opacity-20">
-                                {Array.from({ length: 16 }).map((_, i) => (
-                                    <div key={i} className="bg-zinc-700"></div>
-                                ))}
-                            </div>
-                            <div className="relative z-10 text-center">
-                                <div className="w-32 h-32 bg-gradient-to-br from-cyan-500 to-blue-600 mx-auto mb-4 border-4 border-white"></div>
-                                <div className="bg-black px-4 py-1 border border-zinc-700 inline-block">
-                                    LVL. 24
+                {/* ROW 1: Intro & Hero */}
+                <JaggedRow
+                    height="h-[600px]"
+                    split="diagonal"
+                    left={
+                        <PanelContent bg="bg-cyan-300">
+                            <div className="h-full flex flex-col justify-center max-w-2xl">
+                                <SpeechBubble className="mb-8 w-fit animate-bounce-slow">
+                                    <span className="font-black text-2xl">HEY CITIZEN! 👋</span>
+                                </SpeechBubble>
+                                <h2 className="font-['Bangers'] text-6xl md:text-7xl mb-4 leading-none">I AM LUIS.DEV</h2>
+                                <p className="font-bold text-2xl mb-8">
+                                    Crafting digital experiences with super-human precision!
+                                </p>
+                                <div className="flex gap-4">
+                                    <WobblyButton color="bg-white">DOWNLOAD CV</WobblyButton>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
+                        </PanelContent>
+                    }
+                    right={
+                        <PanelContent bg="bg-yellow-400" className="items-end text-right">
+                            <div className="h-full flex flex-col justify-center items-end pl-[30%]">
+                                <h1 className="font-['Bangers'] text-[8rem] md:text-[10rem] text-white drop-shadow-[6px_6px_0px_rgba(0,0,0,1)] stroke-black leading-[0.8]" style={{ WebkitTextStroke: '4px black' }}>
+                                    CREATIVE<br />DEVELOPER
+                                </h1>
+                                <div className="mt-12 transform rotate-6">
+                                    <BurstButton>VIEW PROJECTS</BurstButton>
+                                </div>
+                            </div>
+                            {/* Floating Zap */}
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1], rotate: [0, 10, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="absolute top-10 right-1/3"
+                            >
+                                <Zap size={80} className="text-black fill-white" />
+                            </motion.div>
+                        </PanelContent>
+                    }
+                />
 
-                <footer className="text-center text-zinc-600 text-xs py-8">
-                    GAME OVER • INSERT COIN TO CONTINUE
-                </footer>
-            </main>
+                {/* ROW 2: Projects (Triple Slant) */}
+                <TripleSlantRow
+                    height="h-[500px]"
+                    items={[
+                        <PanelContent bg="bg-red-500" className="items-center justify-center text-center group cursor-pointer hover:bg-red-600 transition-colors pt-24">
+                            <div className="mb-4 group-hover:scale-110 transition-transform">
+                                <Layout size={64} className="text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
+                            </div>
+                            <h3 className="font-['Bangers'] text-5xl text-white mb-2 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">NEON DASHBOARD</h3>
+                            <span className="text-white font-black uppercase text-lg tracking-wider">Fintech App</span>
+                        </PanelContent>,
+
+                        <PanelContent bg="bg-blue-500" className="items-center justify-center text-center group cursor-pointer hover:bg-blue-600 transition-colors pt-24">
+                            <div className="mb-4 group-hover:scale-110 transition-transform">
+                                <Smartphone size={64} className="text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
+                            </div>
+                            <h3 className="font-['Bangers'] text-5xl text-white mb-2 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">SUPER APP</h3>
+                            <span className="text-white font-black uppercase text-lg tracking-wider">Mobile UI</span>
+                        </PanelContent>,
+
+                        <PanelContent bg="bg-green-500" className="items-center justify-center text-center group cursor-pointer hover:bg-green-600 transition-colors pt-24">
+                            <div className="mb-4 group-hover:scale-110 transition-transform">
+                                <Code size={64} className="text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
+                            </div>
+                            <h3 className="font-['Bangers'] text-5xl text-white mb-2 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">CODE ACADEMY</h3>
+                            <span className="text-white font-black uppercase text-lg tracking-wider">EdTech Platform</span>
+                        </PanelContent>
+                    ]}
+                />
+
+                {/* ROW 3: Skills & Mission (ZigZag) */}
+                <JaggedRow
+                    height="h-[400px]"
+                    split="zigzag"
+                    left={
+                        <PanelContent bg="bg-pink-400">
+                            <div className="h-full flex flex-col justify-center pl-8 max-w-xl">
+                                <div className="bg-white border-4 border-black p-2 inline-block transform -rotate-2 mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-fit">
+                                    <h3 className="font-['Bangers'] text-3xl">POWERS & ABILITIES</h3>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {['REACT', 'TYPESCRIPT', 'UI/UX', 'MOTION', 'NODE.JS', 'FIGMA'].map(skill => (
+                                        <span key={skill} className="bg-white border-2 border-black px-4 py-2 font-black text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:scale-110 transition-transform cursor-default">
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </PanelContent>
+                    }
+                    right={
+                        <PanelContent bg="bg-white" className="items-center text-center">
+                            {/* Align to RIGHT to clear zigzag safely */}
+                            <div className="h-full flex flex-col justify-center items-end text-right pr-16 w-full">
+                                <Star size={64} className="text-yellow-400 fill-current mb-4 animate-spin-slow" />
+                                <h3 className="font-['Bangers'] text-6xl mb-2">LATEST MISSION</h3>
+                                <p className="font-bold text-xl mb-6 max-w-md">
+                                    Building the ultimate design system for the web!
+                                </p>
+                                <Link to="/preview4/case-study" className="font-black underline decoration-4 decoration-red-500 underline-offset-4 hover:text-red-500 text-2xl">
+                                    READ ISSUE #1
+                                </Link>
+                            </div>
+                        </PanelContent>
+                    }
+                />
+
+                {/* ROW 4: Contact & Socials */}
+                <JaggedRow
+                    height="h-[300px]"
+                    split="diagonal"
+                    left={
+                        <PanelContent bg="bg-white">
+                            <div className="h-full flex flex-col justify-center max-w-2xl">
+                                <h3 className="font-['Bangers'] text-5xl mb-6">JOIN THE LEAGUE</h3>
+                                <div className="flex gap-2 w-full">
+                                    <input type="email" placeholder="YOUR EMAIL" className="border-4 border-black p-4 font-bold flex-grow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xl" />
+                                    <button className="bg-black text-white border-4 border-black px-8 font-black hover:bg-slate-800 text-xl">GO</button>
+                                </div>
+                            </div>
+                        </PanelContent>
+                    }
+                    right={
+                        <PanelContent bg="bg-red-500" className="items-center justify-center">
+                            {/* Align to RIGHT to clear diagonal safely */}
+                            <div className="h-full flex flex-col justify-center items-end pr-16 w-full">
+                                <h3 className="font-['Bangers'] text-6xl text-white mb-8 drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">SEND A SIGNAL</h3>
+                                <div className="flex gap-6">
+                                    {[Twitter, Youtube, Facebook, Instagram].map((Icon, i) => (
+                                        <motion.a
+                                            key={i}
+                                            href="#"
+                                            whileHover={{ scale: 1.2, rotate: 10 }}
+                                            className="w-16 h-16 bg-white border-4 border-black flex items-center justify-center text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                                        >
+                                            <Icon size={32} />
+                                        </motion.a>
+                                    ))}
+                                </div>
+                            </div>
+                        </PanelContent>
+                    }
+                />
+
+            </div>
         </div>
     );
 }
