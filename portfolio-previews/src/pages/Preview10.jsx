@@ -1,8 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, lazy, Suspense } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Compass, Anchor, Wind, Navigation, Star, Rocket, CircleDashed, ArrowRight } from 'lucide-react';
-import TreasureMapScene from '../components/TreasureMapScene';
+
+// Lazy load the 3D scene to avoid bundling Three.js in the main chunk
+const TreasureMapScene = lazy(() => import('../components/TreasureMapScene'));
 
 // --- Components ---
 
@@ -57,7 +59,9 @@ export default function Preview10() {
 
             {/* Background: The Etherium */}
             <div className="fixed inset-0 z-0">
-                <TreasureMapScene scrollYProgress={scrollYProgress} />
+                <Suspense fallback={<div className="w-full h-full bg-[#0B0B15]" />}>
+                    <TreasureMapScene scrollYProgress={scrollYProgress} />
+                </Suspense>
 
                 {/* Nebula Clouds (Overlay on top of 3D scene for depth) */}
                 <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-purple-900/20 rounded-full blur-[150px] mix-blend-screen animate-pulse-slow pointer-events-none"></div>

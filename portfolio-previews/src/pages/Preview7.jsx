@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Terminal, Cpu, Shield, Zap, Globe, Wifi, Battery, Radio, Crosshair } from 'lucide-react';
+import useUISound from '../hooks/useUISound';
+import Magnetic from '../components/Magnetic';
+
 
 // Cyberpunk Colors
 const CYBER = {
@@ -23,6 +26,7 @@ const GlitchText = ({ text, as: Component = 'span', className = '' }) => {
 };
 
 const CyberButton = ({ children, onClick, className = '', variant = 'primary' }) => {
+    const { playHover, playClick } = useUISound();
     const baseStyles = "relative px-8 py-4 font-bold tracking-widest uppercase transition-all duration-200 clip-path-polygon group overflow-hidden";
     const variants = {
         primary: `bg-[${CYBER.YELLOW}] text-black hover:bg-[#fff] hover:shadow-[0_0_20px_${CYBER.YELLOW}]`,
@@ -30,7 +34,13 @@ const CyberButton = ({ children, onClick, className = '', variant = 'primary' })
     };
 
     return (
-        <button onClick={onClick} className={`${baseStyles} ${variants[variant] || variants.primary} ${className}`}
+        <button
+            onClick={(e) => {
+                playClick();
+                if (onClick) onClick(e);
+            }}
+            onMouseEnter={playHover}
+            className={`${baseStyles} ${variants[variant] || variants.primary} ${className}`}
             style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' }}
         >
             <span className="relative z-10">{children}</span>
@@ -38,14 +48,18 @@ const CyberButton = ({ children, onClick, className = '', variant = 'primary' })
     );
 };
 
+
 const ProjectCard = ({ title, type, stats, index }) => {
+    const { playHover } = useUISound();
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
+            onMouseEnter={playHover}
             className="group relative bg-black border border-zinc-800 hover:border-[#FCEE0A] transition-colors duration-300"
         >
+
             {/* Decorative Corners */}
             <div className="absolute top-0 left-0 w-2 h-2 bg-[#FCEE0A] opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-0 right-0 w-2 h-2 bg-[#FCEE0A] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -85,6 +99,8 @@ const ProjectCard = ({ title, type, stats, index }) => {
 
 export default function Preview7() {
     const [time, setTime] = useState(new Date());
+    const { playHover, playClick } = useUISound(); // Added for the main buttons using standard button tags
+
 
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
@@ -148,12 +164,21 @@ export default function Preview7() {
                                 I build digital experiences that burn chrome. Full-stack developer architecting the future of the web.
                             </p>
                             <div className="flex flex-wrap gap-6">
-                                <button className="bg-[#FCEE0A] text-black px-8 py-4 font-bold tracking-widest uppercase hover:bg-white hover:shadow-[0_0_20px_#FCEE0A] transition-all clip-path-polygon" style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' }}>
-                                    View_Projects
-                                </button>
-                                <button className="border border-[#00F0FF] text-[#00F0FF] px-8 py-4 font-bold tracking-widest uppercase hover:bg-[#00F0FF] hover:text-black transition-all clip-path-polygon" style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' }}>
-                                    Contact_Net
-                                </button>
+                                <Magnetic>
+                                    <button
+                                        onClick={playClick} onMouseEnter={playHover}
+                                        className="bg-[#FCEE0A] text-black px-8 py-4 font-bold tracking-widest uppercase hover:bg-white hover:shadow-[0_0_20px_#FCEE0A] transition-all clip-path-polygon" style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' }}>
+                                        View_Projects
+                                    </button>
+                                </Magnetic>
+                                <Magnetic>
+                                    <button
+                                        onClick={playClick} onMouseEnter={playHover}
+                                        className="border border-[#00F0FF] text-[#00F0FF] px-8 py-4 font-bold tracking-widest uppercase hover:bg-[#00F0FF] hover:text-black transition-all clip-path-polygon" style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)' }}>
+                                        Contact_Net
+                                    </button>
+                                </Magnetic>
+
                             </div>
                         </div>
 
@@ -265,9 +290,15 @@ export default function Preview7() {
                                 <label className="text-[#FCEE0A] font-mono text-xs tracking-widest mb-2 block">HANDLE</label>
                                 <input type="text" className="w-full bg-[#0a0a0a] border border-zinc-700 p-4 text-white focus:border-[#FCEE0A] focus:outline-none transition-colors" placeholder="Enter your alias..." />
                             </div>
-                            <button className="w-full bg-[#00F0FF] text-black font-bold py-4 tracking-widest uppercase hover:bg-white transition-colors clip-path-polygon" style={{ clipPath: 'polygon(5% 0, 100% 0, 100% 80%, 95% 100%, 0 100%, 0 20%)' }}>
-                                Send_Data
-                            </button>
+                            <Magnetic>
+                                <button
+                                    onClick={(e) => { e.preventDefault(); playClick(); }}
+                                    onMouseEnter={playHover}
+                                    className="w-full bg-[#00F0FF] text-black font-bold py-4 tracking-widest uppercase hover:bg-white transition-colors clip-path-polygon" style={{ clipPath: 'polygon(5% 0, 100% 0, 100% 80%, 95% 100%, 0 100%, 0 20%)' }}>
+                                    Send_Data
+                                </button>
+                            </Magnetic>
+
                         </form>
                     </div>
                 </section>

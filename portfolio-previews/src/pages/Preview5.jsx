@@ -2,6 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Aperture, Camera, Image as ImageIcon, Instagram, Twitter, Mail } from 'lucide-react';
+import Magnetic from '../components/Magnetic';
+
+
 
 const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -39,9 +42,9 @@ export default function Preview5() {
                 {/* Background Image for Text Mask */}
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2942&auto=format&fit=crop"
+                        src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4"
                         alt="Background"
-                        className="w-full h-full object-cover opacity-40"
+                        className="w-full h-full absolute inset-0 opacity-40 object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                 </div>
@@ -61,7 +64,7 @@ export default function Preview5() {
                             variants={fadeInUp}
                             className="text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent bg-clip-text bg-cover bg-center select-none"
                             style={{
-                                backgroundImage: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2940&auto=format&fit=crop')",
+                                backgroundImage: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=60&w=1200&auto=format&fit=crop')",
                                 WebkitTextStroke: "1px rgba(255,255,255,0.1)"
                             }}
                         >
@@ -91,9 +94,9 @@ export default function Preview5() {
 
                     <div className="grid grid-cols-1 gap-32">
                         {[
-                            { title: "Urban Solitude", category: "Street Photography", img: "https://images.unsplash.com/photo-1449824913929-4b63a8278b40?q=80&w=2940&auto=format&fit=crop" },
-                            { title: "Neon Nights", category: "Editorial", img: "https://images.unsplash.com/photo-1555212697-194d092e3b8f?q=80&w=2787&auto=format&fit=crop" },
-                            { title: "Natural Light", category: "Portrait", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=2550&auto=format&fit=crop" }
+                            { title: "Urban Solitude", category: "Street Photography", img: "https://images.unsplash.com/photo-1449824913929-4b63a8278b40" },
+                            { title: "Neon Nights", category: "Editorial", img: "https://images.unsplash.com/photo-1555212697-194d092e3b8f" },
+                            { title: "Natural Light", category: "Portrait", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04" }
                         ].map((project, i) => (
                             <motion.div
                                 key={i}
@@ -110,16 +113,16 @@ export default function Preview5() {
                                             <img
                                                 src={project.img}
                                                 alt={project.title}
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out transform group-hover:scale-105"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                                             />
                                         </div>
                                         {/* Film Strip Decorations */}
-                                        <div className="absolute top-0 left-0 bottom-0 w-8 bg-black flex flex-col justify-between py-2 z-10 opacity-50">
+                                        <div className="absolute top-0 left-0 bottom-0 w-8 bg-black flex flex-col justify-between py-2 z-10 opacity-50 pointer-events-none">
                                             {[...Array(8)].map((_, j) => (
                                                 <div key={j} className="w-4 h-3 bg-white/20 mx-auto rounded-[1px]"></div>
                                             ))}
                                         </div>
-                                        <div className="absolute top-0 right-0 bottom-0 w-8 bg-black flex flex-col justify-between py-2 z-10 opacity-50">
+                                        <div className="absolute top-0 right-0 bottom-0 w-8 bg-black flex flex-col justify-between py-2 z-10 opacity-50 pointer-events-none">
                                             {[...Array(8)].map((_, j) => (
                                                 <div key={j} className="w-4 h-3 bg-white/20 mx-auto rounded-[1px]"></div>
                                             ))}
@@ -179,9 +182,11 @@ export default function Preview5() {
                     <p className="text-zinc-400 text-xl mb-12 font-light">
                         Available for commissions worldwide.
                     </p>
-                    <a href="mailto:hello@example.com" className="inline-block px-12 py-4 bg-white text-black font-bold text-lg hover:bg-zinc-200 transition-colors tracking-widest uppercase">
-                        Get in Touch
-                    </a>
+                    <Magnetic>
+                        <a href="mailto:hello@example.com" className="inline-block px-12 py-4 bg-white text-black font-bold text-lg hover:bg-zinc-200 transition-colors tracking-widest uppercase">
+                            Get in Touch
+                        </a>
+                    </Magnetic>
 
                     <div className="flex justify-center gap-8 mt-20">
                         <a href="#" className="text-zinc-500 hover:text-white transition-colors"><Instagram /></a>

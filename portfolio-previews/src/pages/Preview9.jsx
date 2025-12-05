@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Grid, Circle, Square } from 'lucide-react';
+import PreloadLink from '../components/PreloadLink';
 
 export default function Preview9() {
     return (
@@ -74,7 +75,11 @@ export default function Preview9() {
                 ].map((project, i) => (
                     <div key={i} className="group border-t border-black first:border-t-0 relative overflow-hidden">
                         <div className="absolute inset-0 bg-black text-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]"></div>
-                        <Link to="/preview9/case-study" className="block py-16 px-6 md:px-12 relative z-10 group-hover:text-white transition-colors duration-500">
+                        <PreloadLink
+                            to="/preview9/case-study"
+                            factory={() => import('./Preview9CaseStudy')}
+                            className="block py-16 px-6 md:px-12 relative z-10 group-hover:text-white transition-colors duration-500"
+                        >
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-baseline">
                                 <div className="md:col-span-1 text-sm font-mono opacity-50">({project.id})</div>
                                 <div className="md:col-span-7">
@@ -86,7 +91,7 @@ export default function Preview9() {
                                     <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
                             </div>
-                        </Link>
+                        </PreloadLink>
                     </div>
                 ))}
             </section>

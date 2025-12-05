@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Terminal, Cpu, Shield, Zap, Code, Globe, Database, Lock } from 'lucide-react';
 
@@ -14,29 +14,34 @@ const GlitchText = ({ text }) => {
 };
 
 export default function Preview7CaseStudy() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const moveX = useTransform(x, value => value * 20);
+    const moveY = useTransform(y, value => value * 20);
 
     useEffect(() => {
         const handleMouseMove = (e) => {
-            setMousePosition({
-                x: (e.clientX / window.innerWidth) * 2 - 1,
-                y: (e.clientY / window.innerHeight) * 2 - 1
-            });
+            x.set((e.clientX / window.innerWidth) * 2 - 1);
+            y.set((e.clientY / window.innerHeight) * 2 - 1);
         };
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+    }, [x, y]);
 
     return (
         <div className="preview-7-case-study min-h-screen bg-[#050505] text-[#e0e0e0] font-mono selection:bg-[#0ff] selection:text-black overflow-x-hidden">
             {/* Grid Background */}
-            <div className="fixed inset-0 z-0 pointer-events-none opacity-20"
+            <motion.div className="fixed inset-0 z-0 pointer-events-none opacity-20"
                 style={{
                     backgroundImage: 'linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)',
                     backgroundSize: '40px 40px',
-                    transform: `perspective(500px) rotateX(60deg) translateY(${mousePosition.y * 20}px) translateX(${mousePosition.x * 20}px)`
+                    perspective: 500,
+                    rotateX: 60,
+                    x: moveX,
+                    y: moveY
                 }}>
-            </div>
+            </motion.div>
 
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-sm border-b border-[#0ff]/20">

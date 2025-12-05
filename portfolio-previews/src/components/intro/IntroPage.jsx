@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PORTFOLIO_THEMES } from '../../data/introThemes';
 import { Icons } from '../ui/Icon';
@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { soundEngine } from '../../utils/soundEngine';
 import SystemBoot from './SystemBoot';
 import TutorialOverlay from './TutorialOverlay';
+import AudioControls from '../ui/AudioControls';
 
 const IntroPage = () => {
     const navigate = useNavigate();
@@ -14,10 +15,15 @@ const IntroPage = () => {
     // State
     const [activeIndex, setActiveIndex] = useState(location.state?.initialIndex || 0);
     const [direction, setDirection] = useState(0);
-    // Check if initialIndex is defined (including 0) to skip boot
     const [isBooting, setIsBooting] = useState(location.state?.initialIndex === undefined || location.state?.initialIndex === null);
     const [showTutorial, setShowTutorial] = useState(false);
+    const [showControls, setShowControls] = useState(!isBooting); // Show immediately if not booting
     const [showGrid, setShowGrid] = useState(false);
+
+    // Touch State
+    const touchStart = useRef(null);
+    const touchEnd = useRef(null);
+    const minSwipeDistance = 50;
 
     // Auto-preload images
     useEffect(() => {
@@ -29,13 +35,11 @@ const IntroPage = () => {
 
     // Play Theme Music
     useEffect(() => {
-        // Only play music if not booting AND not showing tutorial
         if (!isBooting && !showTutorial) {
             const theme = PORTFOLIO_THEMES[activeIndex];
             if (theme.music) {
                 soundEngine.playMusic(theme.music);
-                // Restore full volume on Intro
-                soundEngine.setMusicVolume(0.8);
+                soundEngine.setMusicVolume(1.0);
             }
         }
     }, [activeIndex, isBooting, showTutorial]);
@@ -57,18 +61,43 @@ const IntroPage = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeIndex, isBooting, showGrid, showTutorial]);
 
+    // Touch Handlers
+    const onTouchStart = (e) => {
+        touchEnd.current = null;
+        touchStart.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchMove = (e) => {
+        touchEnd.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart.current || !touchEnd.current) return;
+
+        const distance = touchStart.current - touchEnd.current;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) handleNext();
+        if (isRightSwipe) handlePrev();
+    };
+
     const activeTheme = PORTFOLIO_THEMES[activeIndex];
     const totalThemes = PORTFOLIO_THEMES.length;
 
     const handleBootComplete = () => {
         setIsBooting(false);
-        setShowTutorial(true); // Show tutorial after boot
+        // Delay controls and tutorial to allow boot screen to fade out (0.8s exit)
+        setTimeout(() => {
+            setShowTutorial(true);
+            setShowControls(true);
+        }, 800);
     };
 
     const handleTutorialComplete = () => {
         setShowTutorial(false);
         soundEngine.init();
-        soundEngine.playClick(); // Startup sound
+        soundEngine.playClick();
     };
 
     const handleNext = () => {
@@ -90,12 +119,26 @@ const IntroPage = () => {
 
     // Animation Variants
     const containerVariants = {
-        hidden: { opacity: 0 },
+        hidden: (direction) => ({
+            x: direction > 0 ? 50 : -50,
+            opacity: 0
+        }),
         visible: {
+            x: 0,
             opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+                type: "spring",
+                stiffness: 100,
+                damping: 20
+            }
         },
-        exit: { opacity: 0, transition: { duration: 0.3 } }
+        exit: (direction) => ({
+            x: direction > 0 ? -50 : 50,
+            opacity: 0,
+            transition: { duration: 0.3 }
+        })
     };
 
     const itemVariants = {
@@ -128,14 +171,21 @@ const IntroPage = () => {
         })
     };
 
-    // Ensure audio context is ready on any interaction
     const handleInteraction = () => {
         soundEngine.init();
     };
 
     return (
         <>
-            <div onClick={handleInteraction} onKeyDown={handleInteraction}>
+            <div
+                onClick={handleInteraction}
+                onKeyDown={handleInteraction}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                className="h-full w-full"
+            >
+
                 <AnimatePresence>
                     {isBooting && <SystemBoot onComplete={handleBootComplete} />}
                 </AnimatePresence>
@@ -146,6 +196,7 @@ const IntroPage = () => {
 
                 {!isBooting && (
                     <div className={`relative w-full h-[100dvh] overflow-hidden flex flex-col transition-colors duration-700 ease-in-out ${activeTheme.bgStyle}`}>
+                        {showControls && <AudioControls className="fixed top-6 left-1/2 -translate-x-1/2 z-50" />}
                         <AnimatePresence mode="popLayout">
                             <motion.div
                                 key={activeTheme.id}
@@ -154,6 +205,7 @@ const IntroPage = () => {
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.7 }}
                                 className={`absolute inset-0 z-0 ${activeTheme.bgStyle}`}
+                                style={{ willChange: "opacity" }}
                             />
                         </AnimatePresence>
 
@@ -188,6 +240,7 @@ const IntroPage = () => {
                                 repeat: Infinity,
                                 ease: "linear"
                             }}
+                            style={{ willChange: "transform" }}
                         />
                         <main className="relative z-10 flex-1 flex flex-col justify-center w-full min-h-0 overflow-hidden">
                             <div className="px-6 md:px-12 lg:px-16 w-full max-w-[1800px] mx-auto h-full flex flex-col justify-center">
@@ -204,7 +257,7 @@ const IntroPage = () => {
 
                                         {/* Left Column: Text */}
                                         <motion.div
-                                            className="flex-1 flex flex-col justify-center space-y-4 w-full overflow-y-auto max-h-full py-2"
+                                            className="flex-1 flex flex-col justify-center space-y-4 w-full overflow-y-auto max-h-full py-2 no-scrollbar"
                                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                                             variants={containerVariants}
                                         >

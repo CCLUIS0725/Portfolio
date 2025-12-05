@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Github, Linkedin, Mail, ExternalLink, Layers, Palette, Code2, Cpu, Grid, Ruler, MousePointer2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 export default function Preview2() {
     const [hoveredProject, setHoveredProject] = useState(null);
@@ -22,6 +23,7 @@ export default function Preview2() {
 
     return (
         <div className="min-h-screen bg-[#1e293b] text-blue-100 font-mono selection:bg-blue-500/30 overflow-x-hidden relative">
+            <SEO title="The Blueprint" description="A technical blueprint styled portfolio." />
             {/* Background Grid */}
             <div className="fixed inset-0 pointer-events-none z-0"
                 style={{
@@ -220,10 +222,11 @@ export default function Preview2() {
                                     <div className="h-2 bg-blue-900/50 w-full relative overflow-hidden">
                                         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,rgba(30,41,59,1)_2px,rgba(30,41,59,1)_4px)] z-10" />
                                         <motion.div
-                                            initial={{ width: 0 }}
-                                            whileInView={{ width: `${exp.level}%` }}
+                                            initial={{ scaleX: 0 }}
+                                            whileInView={{ scaleX: exp.level / 100 }}
                                             transition={{ duration: 1, delay: 0.2 }}
-                                            className="h-full bg-blue-500"
+                                            className="h-full bg-blue-500 origin-left"
+                                            style={{ willChange: "transform" }}
                                         />
                                     </div>
                                 </div>

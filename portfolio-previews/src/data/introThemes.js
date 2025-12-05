@@ -6,7 +6,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Insert cartridge. Power on. The blue screen glows with infinite potential. A portfolio that fits in your pocket.",
         designPhilosophy: "Pixel-perfect nostalgia meets modern functionality.",
         inspiration: ["Game Boy", "Pixel Art", "Retro Gaming"],
-        previewImage: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=60&w=600&auto=format&fit=crop",
         accentColor: "#facc15", // Pokemon Yellow
         contrastColor: "#1d4ed8", // Blue 700
         fontFamily: "font-['Press_Start_2P']",
@@ -22,7 +22,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Drafting the digital world. Precision, measurement, and structural integrity.",
         designPhilosophy: "Structure is beauty. Everything has a purpose.",
         inspiration: ["Architectural Plans", "CAD", "Technical Drawing"],
-        previewImage: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2071&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=60&w=600&auto=format&fit=crop",
         accentColor: "#60a5fa", // Blue 400
         contrastColor: "#ffffff",
         fontFamily: "font-mono",
@@ -38,7 +38,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Silence is golden. In a noisy web, clarity is the ultimate luxury. Stripped back to the essential.",
         designPhilosophy: "Less is more. Much more.",
         inspiration: ["Swiss Design", "Art Galleries", "Print Editorial"],
-        previewImage: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=2000&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=60&w=600&auto=format&fit=crop",
         accentColor: "#f97316", // Orange 500
         contrastColor: "#000000",
         fontFamily: "font-sans",
@@ -54,7 +54,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "POW! ZAP! A portfolio that packs a punch. Storytelling through panels, speech bubbles, and action.",
         designPhilosophy: "Life is a story. Tell it with impact.",
         inspiration: ["Classic Comics", "Pop Art", "Graphic Novels"],
-        previewImage: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=80&w=2070&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=60&w=600&auto=format&fit=crop",
         accentColor: "#1e40af", // Blue 800
         contrastColor: "#facc15", // Yellow
         fontFamily: "font-['Bangers'] tracking-wider",
@@ -70,7 +70,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Through the lens. Capturing moments, freezing time, and presenting work with cinematic grandeur.",
         designPhilosophy: "Visual storytelling first. Let the images speak.",
         inspiration: ["Cinema", "Photography Books", "Parallax"],
-        previewImage: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2071&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=60&w=600&auto=format&fit=crop",
         accentColor: "#ffffff",
         contrastColor: "#000000",
         fontFamily: "font-sans",
@@ -86,7 +86,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Raw. Unfiltered. Bold. A design that doesn't apologize for being digital. High contrast, hard edges.",
         designPhilosophy: "Function over form. Brutal honesty.",
         inspiration: ["Neo-Brutalism", "Web 1.0", "Punk Design"],
-        previewImage: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=60&w=600&auto=format&fit=crop",
         accentColor: "#FF6B6B",
         contrastColor: "#000000",
         fontFamily: "font-mono font-bold",
@@ -102,7 +102,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "High tech, low life. Jack into the matrix. A portfolio from the year 2077.",
         designPhilosophy: "The future is now. Glitch is aesthetic.",
         inspiration: ["Cyberpunk 2077", "Sci-Fi Interfaces", "Neon Lights"],
-        previewImage: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=80&w=2070&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=60&w=600&auto=format&fit=crop",
         accentColor: "#FCEE0A", // Cyber Yellow
         contrastColor: "#000000",
         fontFamily: "font-mono",
@@ -118,7 +118,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Floating on a cloud. Soft shapes, gentle colors, and a friendly welcome. The web should be fun.",
         designPhilosophy: "Joyful interactions. Organic shapes. Approachable design.",
         inspiration: ["Kawaii", "Soft UI", "Doodles"],
-        previewImage: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=2074&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=60&w=600&auto=format&fit=crop",
         accentColor: "#FF6B6B",
         contrastColor: "#000000",
         fontFamily: "font-sans",
@@ -134,7 +134,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Grid systems. Helvetica. Order. A tribute to the masters of graphic design.",
         designPhilosophy: "Typography is the interface.",
         inspiration: ["Swiss Style", "International Typographic Style", "Posters"],
-        previewImage: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=1974&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=60&w=600&auto=format&fit=crop",
         accentColor: "#000000",
         contrastColor: "#ffffff",
         fontFamily: "font-sans font-bold tracking-tight",
@@ -150,7 +150,7 @@ export const PORTFOLIO_THEMES = [
         narrative: "Charting the unknown. A journey through the stars to discover hidden treasures.",
         designPhilosophy: "The web is a space to explore.",
         inspiration: ["Treasure Planet", "Steampunk", "Three.js"],
-        previewImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+        previewImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=60&w=600&auto=format&fit=crop",
         accentColor: "#FFD700", // Gold
         contrastColor: "#000000",
         fontFamily: "font-serif",

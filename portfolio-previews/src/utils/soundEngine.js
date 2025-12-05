@@ -6,6 +6,7 @@ class SoundEngine {
         this.currentMusicUrl = null;
         this.musicNodes = null;
         this.isMusicPaused = false;
+        this.pausedTime = 0;
     }
 
     init() {
@@ -69,14 +70,12 @@ class SoundEngine {
         osc.stop(this.ctx.currentTime + 0.3);
     }
 
-    playMusic(url) {
+    playMusic(url, startTime = 0) {
         if (!this.ctx) this.init();
         if (this.isMuted) return;
 
         // If same song is playing, do nothing
-        if (this.currentMusicUrl === url && !this.isMusicPaused) return;
-
-        console.log("Attempting to play music:", url);
+        if (this.currentMusicUrl === url && !this.isMusicPaused && !startTime) return;
 
         // Stop current music
         this.stopMusic();
@@ -87,8 +86,10 @@ class SoundEngine {
         if (this.isMusicPaused) return;
 
         const audio = new Audio(url);
+        audio.preload = "none"; // Ensure no preloading until play is called
         audio.loop = true;
         audio.volume = 1.0; // Set element volume to max, control via gain
+        audio.currentTime = startTime;
 
         // Create nodes
         const source = this.ctx.createMediaElementSource(audio);
@@ -102,7 +103,6 @@ class SoundEngine {
         gainNode.gain.linearRampToValueAtTime(0.8, this.ctx.currentTime + 2);
 
         audio.play()
-            .then(() => console.log("Music playing successfully"))
             .catch(e => console.error("Audio play failed (Autoplay blocked?):", e));
 
         this.musicNodes = { audio, source, gainNode };
@@ -160,12 +160,12 @@ class SoundEngine {
     toggleMusicPause() {
         this.isMusicPaused = !this.isMusicPaused;
         if (this.isMusicPaused) {
+            this.pausedTime = this.musicNodes?.audio?.currentTime || 0;
             this.stopMusic();
         } else {
             if (this.currentMusicUrl && !this.isMuted) {
-                const url = this.currentMusicUrl;
-                this.currentMusicUrl = null; // Reset so it plays again
-                this.playMusic(url);
+                // Resume from paused time
+                this.playMusic(this.currentMusicUrl, this.pausedTime || 0);
             }
         }
         return this.isMusicPaused;

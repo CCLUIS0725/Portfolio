@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Star, Hexagon, Box, Circle } from 'lucide-react';
+import Magnetic from '../components/Magnetic';
 
 export default function Preview6() {
     return (
@@ -43,9 +44,11 @@ export default function Preview6() {
                                 I build loud, fast, and accessible web experiences that refuse to be ignored.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-6">
-                                <a href="#work" className="px-8 py-4 bg-black text-white text-xl font-bold uppercase border-2 border-black shadow-[8px_8px_0px_0px_#4DE1C1] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_#4DE1C1] transition-all">
-                                    View Projects
-                                </a>
+                                <Magnetic>
+                                    <a href="#work" className="inline-block px-8 py-4 bg-black text-white text-xl font-bold uppercase border-2 border-black shadow-[8px_8px_0px_0px_#4DE1C1] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_#4DE1C1] transition-all">
+                                        View Projects
+                                    </a>
+                                </Magnetic>
                                 <a href="#contact" className="px-8 py-4 bg-white text-black text-xl font-bold uppercase border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
                                     Contact Me
                                 </a>
